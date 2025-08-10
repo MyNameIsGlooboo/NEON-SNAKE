@@ -1,21 +1,28 @@
 /* Extracted styles from snake_game.html */
 @media (max-width: 767px) {
-    /* Mobile: reduce chrome so the play area is the focus */
+    /* Minimize page chrome so the play area remains the focus and prevent horizontal overflow */
+    body {
+        padding: 8px;
+        overflow-x: hidden;
+    }
+
     .game-container {
-        padding: 10px 8px;
+        padding: 8px 6px;
         width: 100%;
-        max-width: 420px;
+        /* ensure the container never exceeds viewport minus gutters so it stays centered */
+        max-width: calc(100% - 12px);
         margin: 0 auto;
         border-radius: 12px;
         height: auto;
         min-height: auto;
         gap: 10px;
+        box-sizing: border-box;
     }
 
-    /* Responsive canvas: scale to viewport but remain square */
+    /* Responsive canvas: scale to viewport but remain square and centered */
     #game-board {
-        width: min(360px, calc(100vw - 32px));
-        height: min(360px, calc(100vw - 32px));
+        width: min(360px, calc(100vw - 24px));
+        height: min(360px, calc(100vw - 24px));
         max-width: 100%;
         aspect-ratio: 1/1;
         margin: 0 auto;
@@ -27,6 +34,7 @@
         white-space: nowrap;
         letter-spacing: 1px;
         padding: 0 6px;
+        text-align: center;
     }
 
     .score-container {
@@ -38,7 +46,7 @@
         padding: 0 6px;
     }
 
-    /* Smaller control buttons with consistent spacing */
+    /* Controls: stay compact and centered */
     .controls {
         display: flex;
         gap: 10px;
@@ -48,10 +56,10 @@
     .controls button {
         padding: 8px 12px;
         font-size: 0.95rem;
-        min-width: 90px;
+        min-width: 84px;
     }
 
-    /* Touch controls: compact, centered row/stack layout that matches canvas width */
+    /* Touch controls: scale to available width and center */
     .touch-controls {
         width: min(320px, calc(100vw - 48px));
         max-width: 100%;
@@ -63,9 +71,9 @@
     }
 
     .touch-controls button {
-        width: 72px;
+        width: 68px;
         height: 56px;
-        font-size: 1.4rem;
+        font-size: 1.25rem;
         border-radius: 12px;
         display: inline-flex;
         align-items: center;
@@ -75,6 +83,7 @@
 
     #welcome-screen h2 {
         font-size: 1.8rem;
+        text-align: center;
     }
 
     #welcome-screen p, #welcome-screen ul {
