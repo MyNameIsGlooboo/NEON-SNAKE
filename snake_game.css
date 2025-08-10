@@ -661,15 +661,20 @@ button.secondary:hover {
     --modal-width: 420px;
 }
 
-/* backdrop layer is implicit via the modal container */
+/* backdrop layer is implicit via the modal container; center the modal over the canvas area */
 .modal {
     position: absolute;
-    inset: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 120;
-    background: linear-gradient(rgba(2,6,15,0.55), rgba(2,6,15,0.6));
+    background: rgba(0,0,0,0.35); /* subtle backdrop */
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
 }
 
 /* modal card */
