@@ -61,8 +61,18 @@ def _validate_score(score):
         return 0
 
 def _validate_ts(ts):
-    if ts and isinstance(ts, str) and _ISO_RE.match(ts):
-        return ts
+    if ts and isinstance(ts, str):
+        s = ts
+        # Accept ISO timestamps and the common "Z" suffix; try to parse strictly
+        try:
+            if s.endswith('Z'):
+                # fromisoformat doesn't accept trailing Z, strip it
+                datetime.datetime.fromisoformat(s[:-1])
+            else:
+                datetime.datetime.fromisoformat(s)
+            return ts
+        except Exception:
+            pass
     return datetime.datetime.utcnow().isoformat() + 'Z'
 
 @app.route('/health', methods=['GET'])

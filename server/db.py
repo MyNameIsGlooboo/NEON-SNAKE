@@ -6,9 +6,15 @@ from typing import List, Dict, Optional
 DB_PATH = os.path.join(os.path.dirname(__file__), 'scores.db')
 
 def init_db() -> None:
-    "Create the scores table if it does not exist."
+    "Create the scores table if it does not exist and enable WAL for better concurrency."
     conn = sqlite3.connect(DB_PATH)
     try:
+        # Enable WAL mode to improve concurrency for reads/writes
+        try:
+            conn.execute("PRAGMA journal_mode=WAL;")
+        except Exception:
+            pass
+
         conn.execute("""
         CREATE TABLE IF NOT EXISTS scores (
             id INTEGER PRIMARY KEY AUTOINCREMENT,

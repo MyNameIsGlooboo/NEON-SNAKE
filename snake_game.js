@@ -295,6 +295,9 @@ function handleTouchStart(e) {
 }
 
 function handleTouchMove(e) {
+    // Prevent the browser from scrolling while swiping on the game canvas
+    try { e.preventDefault(); } catch (err) {}
+
     if (!touchStartX || !touchStartY) return;
     
     const touchEndX = e.changedTouches[0].screenX;
@@ -340,8 +343,9 @@ leftButton.addEventListener('click', goLeft);
 rightButton.addEventListener('click', goRight);
 downButton.addEventListener('click', goDown);
 document.addEventListener('keydown', handleKeyPress);
-canvas.addEventListener('touchstart', handleTouchStart);
-canvas.addEventListener('touchmove', handleTouchMove);
+// Use passive:true for touchstart and passive:false for touchmove so we can prevent scrolling on touchmove
+canvas.addEventListener('touchstart', handleTouchStart, { passive: true });
+canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
 
 /* Focus trap for modal: keep Tab focus inside modal when open */
 function trapModalFocus(e) {

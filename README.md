@@ -10,7 +10,7 @@ A modern twist on the classic Snake game with neon visuals and smooth gameplay. 
 - **Keyboard Support**: Arrow keys for desktop play
 - **Swipe Gestures**: Swipe to control snake direction on touch devices
 - **Score Tracking**: Current score and high score display
-- **High Score Persistence**: Saves high score using browser cookies
+- **High Score Persistence**: Saves high score using browser localStorage
 - **Pause/Resume**: Ability to pause and resume gameplay
 - **Welcome Screen**: Game instructions and start button
 - **Game Over Screen**: Final score display with restart option
