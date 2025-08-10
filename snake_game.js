@@ -441,9 +441,13 @@ function renderLeaderboardToElem(scores, olElem, limit = 10) {
     }
     let rank = 1;
     for (const item of list) {
-        const name = item.name ? _escapeHtml(item.name) : '—';
+        // Normalize and trim the stored name (defensive)
+        const rawName = item && item.name ? String(item.name).trim() : '';
+        const displayName = rawName || 'Anonymous';
+        const escName = _escapeHtml(displayName);
+
         let tsHtml = '';
-        if (item.ts) {
+        if (item && item.ts) {
             try {
                 const d = new Date(item.ts);
                 tsHtml = `<span class="score-ts">${_escapeHtml(d.toLocaleString())}</span>`;
@@ -451,12 +455,13 @@ function renderLeaderboardToElem(scores, olElem, limit = 10) {
                 tsHtml = `<span class="score-ts">${_escapeHtml(item.ts)}</span>`;
             }
         }
+
+        // Put timestamp inside the score block so layout stays consistent
         const html = `
 <li class="score-row">
   <span class="rank">${rank}</span>
-  <span class="player" title="${_escapeHtml(name)}">${name}</span>
-  <span class="score">${item.score}</span>
-  ${tsHtml}
+  <span class="player" title="${escName}">${escName}</span>
+  <span class="score">${item.score}${tsHtml ? '<br/>' + tsHtml : ''}</span>
 </li>`;
         olElem.insertAdjacentHTML('beforeend', html);
         rank++;
