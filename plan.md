@@ -15,6 +15,11 @@ Steps
 2) Remove server-side artifacts from the default/static deploy target:
    - Delete or archive app.py and any server-only files from the branch or deployment bundle destined for static hosting.
    - Keep API server code (if you want it) in a separate branch or a separate repository to deploy to a server environment.
+   - STATUS: app.py has already been removed from the working tree (per your message). If there are any other server-side files you want removed or archived (examples: server.py, api.py, wsgi.py, any .py implementing Flask/Django, SQLite DB files like app.db, requirements.txt, Procfile), please add their exact paths to the chat and I will prepare repository edits to either delete or move them into an archive folder (e.g., archive_server/).
+   - Recommended workflow when additional server files exist:
+     1. If you want to permanently remove them from the branch (delete from git history later if necessary), use git rm <path> and commit.
+     2. If you want to preserve them but exclude from static deploy, move them into a subfolder (archive_server/) with git mv <path> archive_server/ and commit. This keeps them in the repo but out of the static packaging root.
+
 3) Convert scoreboard to client-side storage (localStorage) and add UI:
    - Add/ensure a leaderboard panel shown on the welcome and game-over screens.
    - Add an input for player name on game-over and allow skipping.
@@ -40,8 +45,13 @@ Notes / decisions
 - Primary target: static web hosting so the game can be deployed quickly with zero server maintenance.
 - Server-side API is optional and should be treated as a separate deployable component (different repo/branch or separate deployment target).
 
-Suggested commands (run from repository root)
+Next steps / How I can help now
+- If you want me to archive other server files, add their exact paths to the chat (e.g., backend/app.py, api.py, requirements.txt, app.db). I will then:
+  1) Prepare SEARCH/REPLACE edits to move or remove them.
+  2) Provide the exact git commands to run to stage and commit those changes.
+
+Suggested commands to run now (from repository root)
 ```bash
-git rm app.py
-git commit -m "chore: remove Flask backend from static deployment; target web hosting"
+git add -A
+git commit -m "chore: remove server-side artifacts (app.py removed)"
 ```
