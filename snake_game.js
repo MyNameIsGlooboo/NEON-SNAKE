@@ -337,6 +337,28 @@ document.addEventListener('keydown', handleKeyPress);
 canvas.addEventListener('touchstart', handleTouchStart);
 canvas.addEventListener('touchmove', handleTouchMove);
 
+/* Focus trap for modal: keep Tab focus inside modal when open */
+function trapModalFocus(e) {
+    if (!gameOverScreen || !gameOverScreen.classList.contains('show')) return;
+    if (e.key !== 'Tab') return;
+    const focusable = gameOverScreen.querySelectorAll('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])');
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+        if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+        }
+    } else {
+        if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+        }
+    }
+}
+document.addEventListener('keydown', trapModalFocus, true);
+
 /* Load initial high score from localStorage (fallback to 0) */
 (function loadHighScore() {
     try {
@@ -567,6 +589,11 @@ if (scoreSubmitForm) {
                     gameOverScreen.setAttribute('aria-hidden', 'true');
                 }
                 if (statusElem) statusElem.classList.add('visually-hidden');
+                // restore body state and previous focus
+                try {
+                    document.body.classList.remove('modal-open');
+                    if (_prevActiveElement && typeof _prevActiveElement.focus === 'function') _prevActiveElement.focus();
+                } catch (e) {}
             }, 800);
         });
     });

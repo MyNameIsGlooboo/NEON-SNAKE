@@ -697,6 +697,11 @@ button.secondary:hover {
     }
 }
 
+/* Prevent background scrolling when a modal is open */
+body.modal-open {
+    overflow: hidden;
+}
+
 /* Form / input inside modal - improved with icon and stronger focus */
 .submit-score-form .player-name-field {
     display: flex;
