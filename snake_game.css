@@ -636,11 +636,10 @@ button.secondary:hover {
 .modal {
     position: absolute;
     inset: 0;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     z-index: 120;
-    pointer-events: none;
     background: linear-gradient(rgba(2,6,15,0.55), rgba(2,6,15,0.6));
 }
 
@@ -671,6 +670,7 @@ button.secondary:hover {
 
 /* visible state */
 .modal.show {
+    display: flex;
     pointer-events: auto;
 }
 
