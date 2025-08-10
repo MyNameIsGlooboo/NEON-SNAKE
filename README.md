@@ -34,4 +34,6 @@ A modern twist on the classic Snake game with neon visuals and smooth gameplay. 
 
 Simply open `snake_game.html` in any modern web browser to play.
 
+[https://mynameisglooboo.github.io/NEON-SNAKE/snake_game.html](https://mynameisglooboo.github.io/NEON-SNAKE/snake_game.html)
+
 > **Note**: The game requires JavaScript to be enabled in your browser.
