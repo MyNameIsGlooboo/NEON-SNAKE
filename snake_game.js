@@ -214,7 +214,19 @@ function handleKeyPress(e) {
     if ([37, 38, 39, 40].includes(e.keyCode)) {
         e.preventDefault();
     }
-    
+
+    // If game-over modal is shown, allow Esc to close and Enter to submit
+    if (gameOverScreen && gameOverScreen.classList.contains('show')) {
+        if (e.keyCode === 27) { // Esc
+            gameOverScreen.classList.remove('show');
+            gameOverScreen.setAttribute('aria-hidden', 'true');
+        } else if (e.keyCode === 13) { // Enter
+            const form = document.getElementById('score-submit-form');
+            if (form) form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        }
+        return;
+    }
+
     // Left arrow
     if (e.keyCode === 37 && dx !== 1) {
         directionQueue.push({ dx: -1, dy: 0 });
@@ -422,6 +434,8 @@ const gameOverLeaderboard = document.getElementById('game-over-leaderboard');
 const playerNameInput = document.getElementById('player-name');
 const submitScoreBtn = document.getElementById('submit-score-btn');
 const skipSubmitBtn = document.getElementById('skip-submit-btn');
+const scoreSubmitForm = document.getElementById('score-submit-form');
+const closeGameOverBtn = document.getElementById('close-game-over');
 
 /* Refresh both leaderboards from localStorage */
 function refreshLeaderboards() {
@@ -436,6 +450,18 @@ function onGameOverShowLeaderboard(currentScore) {
     if (playerNameInput) playerNameInput.value = '';
     // show leaderboard area
     if (gameOverLeaderboard) gameOverLeaderboard.style.display = 'block';
+    // show modal overlay and focus input
+    if (gameOverScreen) {
+        gameOverScreen.classList.add('show');
+        gameOverScreen.setAttribute('aria-hidden', 'false');
+    }
+    setTimeout(function () {
+        try {
+            if (playerNameInput) playerNameInput.focus();
+        } catch (e) {
+            // ignore focus errors in some browsers / headless
+        }
+    }, 120);
 }
 
 /* Hook into existing endGame behavior by augmenting endGame (endGame already calls showing UI) */
@@ -447,41 +473,65 @@ endGame = function () {
     onGameOverShowLeaderboard(score);
 };
 
-/* Submit / skip handlers */
-if (submitScoreBtn) {
-    submitScoreBtn.addEventListener('click', function () {
+/* Submit / skip handlers (use form submit for accessibility) */
+if (scoreSubmitForm) {
+    scoreSubmitForm.addEventListener('submit', function (evt) {
+        evt.preventDefault();
         const name = playerNameInput ? playerNameInput.value.trim() : '';
         const ts = new Date().toISOString();
-        // Try remote submit; on failure, fall back to local storage
-        submitScoreBtn.disabled = true;
+        if (submitScoreBtn) submitScoreBtn.disabled = true;
+        const statusElem = document.getElementById('submit-status');
+        if (statusElem) {
+            statusElem.classList.remove('visually-hidden');
+            statusElem.textContent = 'Submitting…';
+        }
+
         submitToApi(name || null, score).then(remoteObj => {
-            // If API returned an object, also store locally for offline display
             const rname = remoteObj && remoteObj.name !== undefined ? remoteObj.name : name || null;
             const rscore = remoteObj && remoteObj.score !== undefined ? remoteObj.score : score;
             const rts = remoteObj && remoteObj.ts ? remoteObj.ts : ts;
             addLocalScore(rname, rscore, rts);
             refreshLeaderboards();
+            if (statusElem) statusElem.textContent = 'Score saved';
         }).catch(() => {
             // Fallback: save locally
             addLocalScore(name || null, score, ts);
             refreshLeaderboards();
+            if (statusElem) statusElem.textContent = 'Saved locally';
         }).finally(() => {
-            submitScoreBtn.disabled = false;
-            // hide submit UI after submit
+            if (submitScoreBtn) submitScoreBtn.disabled = false;
             if (playerNameInput) playerNameInput.value = '';
+            // keep modal visible briefly then close
+            setTimeout(function () {
+                if (gameOverScreen) {
+                    gameOverScreen.classList.remove('show');
+                    gameOverScreen.setAttribute('aria-hidden', 'true');
+                }
+                if (statusElem) statusElem.classList.add('visually-hidden');
+            }, 800);
         });
     });
 }
 
 if (skipSubmitBtn) {
     skipSubmitBtn.addEventListener('click', function () {
-        // Save the current score as an anonymous/local entry and refresh leaderboards
         const ts = new Date().toISOString();
         addLocalScore(null, score, ts);
         refreshLeaderboards();
-        // hide submit UI and clear name input
         if (playerNameInput) playerNameInput.value = '';
-        gameOverScreen.classList.remove('show');
+        if (gameOverScreen) {
+            gameOverScreen.classList.remove('show');
+            gameOverScreen.setAttribute('aria-hidden', 'true');
+        }
+    });
+}
+
+if (closeGameOverBtn) {
+    closeGameOverBtn.addEventListener('click', function () {
+        if (gameOverScreen) {
+            gameOverScreen.classList.remove('show');
+            gameOverScreen.setAttribute('aria-hidden', 'true');
+        }
     });
 }
 

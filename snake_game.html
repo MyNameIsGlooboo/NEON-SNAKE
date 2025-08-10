@@ -48,26 +48,36 @@
             <button id="right-btn">→</button>
             <button id="down-btn">↓</button>
         </div>
-        <div id="game-over">
-            <div>GAME OVER!</div>
-            <div>Your score: <span id="final-score">0</span></div>
-            <div class="submit-score">
-                <label for="player-name" class="submit-label">Enter name (optional)</label>
-                <div class="player-name-field">
-                    <input id="player-name" class="player-name-input" type="text" maxlength="32" placeholder="Your name" aria-label="Player name (optional)">
+        <div id="game-over" role="dialog" aria-modal="true" aria-labelledby="game-over-title" class="modal" aria-hidden="true">
+            <h2 id="game-over-title" class="modal-title">GAME OVER!</h2>
+            <div class="modal-body">
+                <div class="modal-score">Your score: <span id="final-score">0</span></div>
+
+                <form id="score-submit-form" class="submit-score-form" novalidate>
+                    <label for="player-name" class="visually-hidden">Enter name (optional)</label>
+                    <div class="player-name-field">
+                        <input id="player-name" class="player-name-input" type="text" maxlength="32" placeholder="Your name" aria-label="Player name (optional)">
+                    </div>
+                    <div class="submit-actions">
+                        <button id="submit-score-btn" class="primary" type="submit">SUBMIT SCORE</button>
+                        <button id="skip-submit-btn" class="secondary" type="button">SKIP</button>
+                    </div>
+                    <div id="submit-status" class="visually-hidden" aria-live="polite"></div>
+                </form>
+
+                <div id="game-over-leaderboard" class="leaderboard panel" role="region" aria-label="Game over leaderboard">
+                    <div class="panel-header">
+                        <h3>Top Scores</h3>
+                    </div>
+                    <ol id="leaderboard-list-gameover" class="leaderboard-list"></ol>
                 </div>
-                <div class="submit-actions">
-                    <button id="submit-score-btn" class="primary">SUBMIT SCORE</button>
-                    <button id="skip-submit-btn" class="secondary">SKIP</button>
+
+                <div class="modal-footer">
+                    <button id="restart-btn" class="primary">PLAY AGAIN</button>
                 </div>
             </div>
-            <div id="game-over-leaderboard" class="leaderboard panel" role="region" aria-label="Game over leaderboard">
-                <div class="panel-header">
-                    <h3>Top Scores</h3>
-                </div>
-                <ol id="leaderboard-list-gameover" class="leaderboard-list"></ol>
-            </div>
-            <button id="restart-btn">PLAY AGAIN</button>
+
+            <button id="close-game-over" class="modal-close panel-close" aria-label="Close game over" type="button">✕</button>
         </div>
         <div id="game-paused">
             <div>GAME PAUSED</div>

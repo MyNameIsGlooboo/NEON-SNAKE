@@ -491,28 +491,110 @@ button.secondary:hover {
     max-width: 360px;
 }
 
-#game-over, #game-paused {
+/* Modal dialog for game-over */
+.modal {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 120;
+    pointer-events: none;
+}
+
+.modal .modal-body {
     width: 100%;
-    height: 100%;
+    max-width: 420px;
+    background: linear-gradient(180deg, rgba(10,10,20,0.9), rgba(5,5,10,0.85));
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 12px 40px rgba(0,150,255,0.08);
+    border: 1px solid rgba(0,150,255,0.08);
+    pointer-events: auto;
+    text-align: center;
+    color: #eafcff;
+}
+
+.modal .modal-title {
+    font-size: 2rem;
+    margin: 0 0 8px 0;
+    color: #ffffff;
+    text-shadow: 0 6px 20px rgba(0,217,255,0.06);
+}
+
+.modal.show {
+    pointer-events: auto;
+}
+
+.modal .modal-score {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: #cfeffb;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+}
+
+.modal-close:hover {
+    background: rgba(255,255,255,0.02);
+}
+
+/* Form / input inside modal */
+.submit-score-form .player-name-input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(0,0,0,0.25);
+    color: #eafcff;
+    outline: none;
+    transition: box-shadow 0.12s ease, border-color 0.12s ease, transform 0.06s ease;
+}
+
+.submit-score-form .player-name-input::placeholder {
+    color: rgba(255,255,255,0.5);
+}
+
+.submit-score-form .player-name-input:focus {
+    box-shadow: 0 0 0 6px rgba(0,229,255,0.08);
+    border-color: rgba(0,217,255,0.6);
+    transform: translateY(-1px);
+}
+
+.modal-footer {
+    margin-top: 12px;
+}
+
+/* utility for screen-reader-only text */
+.visually-hidden { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+
+#game-paused {
+    position: absolute;
+    inset: 0;
     background: rgba(0, 0, 0, 0.8);
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     color: white;
     font-size: 2.5rem;
     text-align: center;
-    border-radius: 20px;
-    opacity: 0;
+    z-index: 110;
     pointer-events: none;
+    opacity: 0;
     transition: opacity 0.5s ease;
-    z-index: 10;
 }
 
-#game-over.show, #game-paused.show {
+#game-paused.show {
     opacity: 1;
     pointer-events: all;
 }
