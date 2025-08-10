@@ -52,11 +52,13 @@
             <div>GAME OVER!</div>
             <div>Your score: <span id="final-score">0</span></div>
             <div class="submit-score">
-                <label for="player-name">Enter name (optional):</label>
-                <input id="player-name" type="text" maxlength="32" placeholder="Your name">
+                <label for="player-name" class="submit-label">Enter name (optional)</label>
+                <div class="player-name-field">
+                    <input id="player-name" class="player-name-input" type="text" maxlength="32" placeholder="Your name" aria-label="Player name (optional)">
+                </div>
                 <div class="submit-actions">
-                    <button id="submit-score-btn">SUBMIT SCORE</button>
-                    <button id="skip-submit-btn">SKIP</button>
+                    <button id="submit-score-btn" class="primary">SUBMIT SCORE</button>
+                    <button id="skip-submit-btn" class="secondary">SKIP</button>
                 </div>
             </div>
             <div id="game-over-leaderboard" class="leaderboard panel" role="region" aria-label="Game over leaderboard">

@@ -468,3 +468,95 @@ button.secondary:hover {
     text-shadow: 0 0 10px rgba(255, 0, 170, 0.7);
     margin: 10px 0;
 }
+
+/* Submit score / player name styles */
+.submit-score {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+    padding: 6px 0;
+}
+
+.submit-label {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.9);
+    text-align: center;
+}
+
+.player-name-field {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.player-name-input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.02);
+    color: #eafcff;
+    outline: none;
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,0.15);
+    font-size: 1rem;
+    transition: box-shadow 0.12s ease, border-color 0.12s ease, transform 0.06s ease;
+}
+
+.player-name-input::placeholder {
+    color: rgba(255,255,255,0.5);
+}
+
+.player-name-input:focus {
+    border-color: rgba(0,217,255,0.6);
+    box-shadow: 0 6px 20px rgba(0,217,255,0.08);
+    background: rgba(0,0,0,0.04);
+    transform: translateY(-1px);
+}
+
+.submit-actions {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+    margin-top: 4px;
+}
+
+/* Primary action style (submit) */
+button.primary {
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #00ffb3 0%, #00aaff 100%);
+    border: none;
+    color: #00121a;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,170,255,0.12);
+    transition: transform 0.08s ease, box-shadow 0.12s ease;
+}
+
+button.primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 26px rgba(0,170,255,0.16);
+}
+
+/* Ensure secondary button still looks appropriate in this area */
+button.secondary {
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+}
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+    .player-name-input {
+        font-size: 0.95rem;
+        padding: 9px 10px;
+    }
+    .submit-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
