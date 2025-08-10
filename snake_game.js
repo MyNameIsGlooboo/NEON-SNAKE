@@ -68,16 +68,17 @@ function generateFood() {
     }
 }
 
-// Update score display
+/* Update score display and persist high score to localStorage */
 function updateScore() {
     scoreElement.textContent = score;
     if (score > highScore) {
         highScore = score;
-        highScoreElement.textContent = highScore;
-        // Save new high score to cookie
-        const d = new Date();
-        d.setFullYear(d.getFullYear() + 1);
-        document.cookie = `high_score=${highScore}; expires=${d.toUTCString()}; path=/`;
+        if (highScoreElement) highScoreElement.textContent = highScore;
+        try {
+            localStorage.setItem('neon_snake_high_score', String(highScore));
+        } catch (e) {
+            // ignore storage errors (e.g., quota, privacy modes)
+        }
     }
 }
 
@@ -319,21 +320,16 @@ document.addEventListener('keydown', handleKeyPress);
 canvas.addEventListener('touchstart', handleTouchStart);
 canvas.addEventListener('touchmove', handleTouchMove);
 
-// Function to get cookie by name
-function getCookie(name) {
-    const cookies = document.cookie.split(';');
-    for (let cookie of cookies) {
-        const [cookieName, cookieValue] = cookie.trim().split('=');
-        if (cookieName === name) {
-            return parseInt(cookieValue);
-        }
+/* Load initial high score from localStorage (fallback to 0) */
+(function loadHighScore() {
+    try {
+        const hs = localStorage.getItem('neon_snake_high_score');
+        highScore = hs ? (parseInt(hs, 10) || 0) : 0;
+    } catch (e) {
+        highScore = 0;
     }
-    return 0;
-}
-
-// Get initial high score from cookie
-highScore = getCookie('high_score');
-highScoreElement.textContent = highScore;
+    if (highScoreElement) highScoreElement.textContent = highScore;
+})();
 
 /* --- Leaderboard / score persistence (client-first, localStorage fallback) --- */
 
@@ -377,6 +373,16 @@ function addLocalScore(name, score, ts) {
     });
     if (scores.length > 100) scores.length = 100;
     saveLocalScores(scores);
+    // Keep high score in sync with localStorage when adding a local score
+    if (typeof score === 'number' && score > highScore) {
+        highScore = score;
+        if (highScoreElement) highScoreElement.textContent = highScore;
+        try {
+            localStorage.setItem('neon_snake_high_score', String(highScore));
+        } catch (e) {
+            // ignore
+        }
+    }
     return scores;
 }
 
