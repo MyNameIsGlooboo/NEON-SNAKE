@@ -12,9 +12,13 @@
                 max-width: 100%;
                 margin: 0;
                 border-radius: 0;
-                height: 100vh;
-                justify-content: center;
+                height: auto;
+                min-height: 100vh;
                 gap: 10px;
+            }
+            
+            #game-board {
+                max-width: 100% !important;
             }
             
             h1 {
@@ -31,8 +35,10 @@
             }
             
             .touch-controls {
-                width: 200px;
-                height: 120px;
+                width: 80%;
+                max-width: 250px;
+                height: auto;
+                aspect-ratio: 2/1;
             }
             
             .touch-controls button {
@@ -48,7 +54,7 @@
             }
             
             #welcome-screen {
-                padding: 10px;
+                padding: 5px;
             }
             
             #welcome-screen ul {
