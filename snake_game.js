@@ -408,13 +408,30 @@ function renderLeaderboardToElem(scores, olElem, limit = 10) {
     olElem.innerHTML = '';
     const list = (scores || []).slice(0, limit);
     if (list.length === 0) {
-        olElem.insertAdjacentHTML('beforeend', '<li>No scores yet</li>');
+        olElem.insertAdjacentHTML('beforeend', '<li class="empty">No scores yet</li>');
         return;
     }
+    let rank = 1;
     for (const item of list) {
         const name = item.name ? _escapeHtml(item.name) : '—';
-        const ts = item.ts ? ' <small>(' + _escapeHtml(item.ts) + ')</small>' : '';
-        olElem.insertAdjacentHTML('beforeend', `<li>${name} — ${item.score}${ts}</li>`);
+        let tsHtml = '';
+        if (item.ts) {
+            try {
+                const d = new Date(item.ts);
+                tsHtml = `<span class="score-ts">${_escapeHtml(d.toLocaleString())}</span>`;
+            } catch (e) {
+                tsHtml = `<span class="score-ts">${_escapeHtml(item.ts)}</span>`;
+            }
+        }
+        const html = `
+<li class="score-row">
+  <span class="rank">${rank}</span>
+  <span class="player" title="${_escapeHtml(name)}">${name}</span>
+  <span class="score">${item.score}</span>
+  ${tsHtml}
+</li>`;
+        olElem.insertAdjacentHTML('beforeend', html);
+        rank++;
     }
 }
 
@@ -590,11 +607,20 @@ if (closeGameOverBtn) {
 if (viewLeaderboardBtn && welcomeLeaderboard) {
     viewLeaderboardBtn.addEventListener('click', function () {
         const opened = welcomeLeaderboard.classList.toggle('open');
-        if (opened) refreshLeaderboards();
+        welcomeLeaderboard.setAttribute('aria-hidden', opened ? 'false' : 'true');
+        if (opened) {
+            refreshLeaderboards();
+            const closeBtn = document.getElementById('close-welcome-leaderboard');
+            if (closeBtn) closeBtn.focus();
+        } else {
+            viewLeaderboardBtn.focus();
+        }
     });
     const closeWelcomeBtn = document.getElementById('close-welcome-leaderboard');
     if (closeWelcomeBtn) closeWelcomeBtn.addEventListener('click', function () {
         welcomeLeaderboard.classList.remove('open');
+        welcomeLeaderboard.setAttribute('aria-hidden', 'true');
+        viewLeaderboardBtn.focus();
     });
 }
 
