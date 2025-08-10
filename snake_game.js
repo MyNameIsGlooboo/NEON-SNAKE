@@ -503,6 +503,22 @@ function refreshLeaderboards() {
     renderLeaderboardToElem(scores, leaderboardListGameOver);
 }
 
+/* Utility: toast notifications */
+function showToast(message, timeout = 2200) {
+    try {
+        let el = document.getElementById('toast');
+        if (!el) return;
+        el.textContent = message;
+        el.classList.add('show');
+        el.setAttribute('aria-hidden','false');
+        if (el._hideTimer) clearTimeout(el._hideTimer);
+        el._hideTimer = setTimeout(() => {
+            el.classList.remove('show');
+            el.setAttribute('aria-hidden','true');
+        }, timeout);
+    } catch (e) {}
+}
+
 /* Public function to be called when game ends to show leaderboard and prepare submission */
 function onGameOverShowLeaderboard(currentScore) {
     refreshLeaderboards();
@@ -588,7 +604,11 @@ if (scoreSubmitForm) {
                     gameOverScreen.classList.remove('show');
                     gameOverScreen.setAttribute('aria-hidden', 'true');
                 }
-                if (statusElem) statusElem.classList.add('visually-hidden');
+                if (statusElem) {
+                    const msg = statusElem.textContent || 'Score saved';
+                    try { showToast(msg, 2400); } catch (e) {}
+                    statusElem.classList.add('visually-hidden');
+                }
                 // restore body state and previous focus
                 try {
                     document.body.classList.remove('modal-open');
