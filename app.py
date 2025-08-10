@@ -1,4 +1,13 @@
+from pathlib import Path
+from datetime import datetime
+import sqlite3
+from flask import Flask, request, jsonify, send_from_directory, abort
 
+APP_DIR = Path(__file__).parent.resolve()
+DB_PATH = APP_DIR / "scores.db"
+STATIC_DIR = APP_DIR  # static files (snake_game.html, snake_game.css, snake_game.js) live in repo root
+
+app = Flask(__name__)
 
 def get_db_connection():
     conn = sqlite3.connect(str(DB_PATH))
