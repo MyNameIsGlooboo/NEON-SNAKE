@@ -436,6 +436,8 @@ const submitScoreBtn = document.getElementById('submit-score-btn');
 const skipSubmitBtn = document.getElementById('skip-submit-btn');
 const scoreSubmitForm = document.getElementById('score-submit-form');
 const closeGameOverBtn = document.getElementById('close-game-over');
+/* remember what had focus before opening modal so we can restore it */
+let _prevActiveElement = null;
 
 /* Refresh both leaderboards from localStorage */
 function refreshLeaderboards() {
@@ -450,11 +452,27 @@ function onGameOverShowLeaderboard(currentScore) {
     if (playerNameInput) playerNameInput.value = '';
     // show leaderboard area
     if (gameOverLeaderboard) gameOverLeaderboard.style.display = 'block';
+
+    // Save previous focus and prevent background scroll
+    try {
+        _prevActiveElement = document.activeElement;
+        document.body.classList.add('modal-open');
+    } catch (e) {
+        _prevActiveElement = null;
+    }
+
     // show modal overlay and focus input
     if (gameOverScreen) {
         gameOverScreen.classList.add('show');
         gameOverScreen.setAttribute('aria-hidden', 'false');
+        try {
+            gameOverScreen.focus();
+        } catch (e) {
+            // ignore focus errors
+        }
     }
+
+    // Focus the name input when available
     setTimeout(function () {
         try {
             if (playerNameInput) playerNameInput.focus();
@@ -523,6 +541,11 @@ if (skipSubmitBtn) {
             gameOverScreen.classList.remove('show');
             gameOverScreen.setAttribute('aria-hidden', 'true');
         }
+        // restore focus and body state
+        try {
+            document.body.classList.remove('modal-open');
+            if (_prevActiveElement && typeof _prevActiveElement.focus === 'function') _prevActiveElement.focus();
+        } catch (e) {}
     });
 }
 
@@ -532,6 +555,10 @@ if (closeGameOverBtn) {
             gameOverScreen.classList.remove('show');
             gameOverScreen.setAttribute('aria-hidden', 'true');
         }
+        try {
+            document.body.classList.remove('modal-open');
+            if (_prevActiveElement && typeof _prevActiveElement.focus === 'function') _prevActiveElement.focus();
+        } catch (e) {}
     });
 }
 
