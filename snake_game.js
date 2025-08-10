@@ -89,12 +89,15 @@ function updateScore() {
 
 // Draw game elements
 function draw() {
-    // Clear canvas
+    // Clear canvas using CSS pixel canvasSize (works correctly with DPR scaling)
+    ctx.clearRect(0, 0, canvasSize, canvasSize);
     ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, canvasSize, canvasSize);
     
     // Draw snake
     snake.forEach((segment, index) => {
+        // save/restore so shadows don't leak between elements
+        ctx.save();
         if (index === 0) {
             // Head
             ctx.fillStyle = '#00ffaa';
@@ -114,9 +117,11 @@ function draw() {
         ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
         ctx.strokeStyle = 'rgba(0, 0, 30, 0.5)';
         ctx.strokeRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
+        ctx.restore();
     });
     
     // Draw food
+    ctx.save();
     ctx.fillStyle = '#ff0066';
     ctx.shadowBlur = 15;
     ctx.shadowColor = '#ff0066';
@@ -129,6 +134,7 @@ function draw() {
         Math.PI * 2
     );
     ctx.fill();
+    ctx.restore();
 }
 
 // Move snake
