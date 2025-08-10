@@ -661,11 +661,12 @@ button.secondary:hover {
 
 /* Modal card: comfortable single-column base, two-column on wide screens */
 .modal .modal-body {
+    position: relative;
     width: 100%;
     max-width: 640px;
     background: linear-gradient(180deg, rgba(10,12,16,0.98), rgba(6,8,12,0.95));
     border-radius: calc(var(--radius) + 4px);
-    padding: 22px;
+    padding: 36px 22px 22px;
     box-shadow: 0 40px 90px rgba(0,120,200,0.10), inset 0 -6px 20px rgba(0,0,0,0.55);
     border: 1px solid rgba(0,150,255,0.10);
     pointer-events: auto;
@@ -741,12 +742,22 @@ button.secondary:hover {
     margin-top: 6px;
 }
 
-/* title */
+/* title (positioned visually above the modal card) */
 .modal .modal-title {
-    font-size: 1.9rem;
-    margin: 0 0 8px 0;
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.05rem;
+    margin: 0;
     color: #ffffff;
-    text-shadow: 0 6px 20px rgba(0,217,255,0.04);
+    letter-spacing: 1.6px;
+    padding: 8px 18px;
+    border-radius: 22px;
+    background: linear-gradient(90deg, rgba(0,0,0,0.24), rgba(0,0,0,0.12));
+    box-shadow: 0 8px 30px rgba(0,120,200,0.14), 0 2px 6px rgba(0,0,0,0.6);
+    z-index: 20;
+    text-shadow: 0 6px 18px rgba(0,217,255,0.04);
 }
 
 /* visible state */
