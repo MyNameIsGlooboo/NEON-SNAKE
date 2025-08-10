@@ -1,110 +1,147 @@
 /* Extracted styles from snake_game.html */
 @media (max-width: 767px) {
+    /* Reduce outer chrome so the play area remains prominent on small screens */
     .game-container {
-        padding: 10px;
+        padding: 12px 10px;
         width: 100%;
-        max-width: 100%;
-        margin: 0;
-        border-radius: 0;
+        max-width: 380px;
+        margin: 0 auto;
+        border-radius: 12px;
         height: auto;
-        min-height: 100vh;
-        gap: 8px;
+        min-height: auto;
+        gap: 10px;
     }
-    
+
+    /* Fix canvas size on small screens so it doesn't stretch to fill wide gutters */
     #game-board {
-        max-width: 100% !important;
+        width: 320px;
+        height: 320px;
+        max-width: 100%;
+        aspect-ratio: 1/1;
+        margin: 0 auto;
     }
-    
+
     h1 {
         font-size: 1.6rem;
         white-space: nowrap;
         letter-spacing: 1px;
         padding: 0 5px;
     }
-    
+
     .score-container {
         font-size: 1rem;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
     }
-    
+
+    /* Smaller control buttons with consistent spacing */
     .controls button {
-        padding: 8px 15px;
-        font-size: 1rem;
+        padding: 8px 12px;
+        font-size: 0.95rem;
+        min-width: 90px;
     }
-    
+
+    /* Touch controls scaled to the canvas and centered */
     .touch-controls {
-        width: 90%;
-        max-width: 280px;
+        width: 220px;
+        max-width: 90%;
         height: auto;
         aspect-ratio: 3/2;
-        margin: 20px auto 0;
+        margin: 12px auto 0;
+        gap: 10px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 1fr);
     }
-    
+
     .touch-controls button {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 0;
+        width: 100%;
+        height: 100%;
     }
-    
+
     #welcome-screen h2 {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
-    
+
     #welcome-screen p, #welcome-screen ul {
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
-    
+
     #welcome-screen {
-        padding: 5px;
+        padding: 8px;
     }
-    
+
     #welcome-screen ul {
-        max-width: 90%;
+        max-width: 95%;
     }
 }
 
 @media (max-width: 480px) {
+    /* Tight mobile layout: reduce padding and keep game area square and centered */
     .game-container {
-        padding: 8px;
-        gap: 4px;
+        padding: 8px 8px;
+        gap: 8px;
+        max-width: 360px;
+        margin: 0 auto;
     }
-    
+
     h1 {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         padding: 0 5px;
     }
-    
+
     .score-container {
         font-size: 0.9rem;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
     }
-    
+
     .controls button {
-        padding: 6px 12px;
+        padding: 6px 10px;
         font-size: 0.9rem;
+        min-width: 72px;
     }
-    
+
+    /* Fix canvas to a comfortable size on very small screens */
+    #game-board {
+        width: 280px;
+        height: 280px;
+        max-width: 100%;
+        aspect-ratio: 1/1;
+        margin: 0 auto;
+    }
+
     .touch-controls {
-        max-width: 200px;
+        width: 200px;
+        max-width: 90%;
         aspect-ratio: 3/2;
+        margin: 10px auto 0;
+        gap: 8px;
     }
-    
+
     .touch-controls button {
         font-size: 1.2rem;
     }
-    
+
     #welcome-screen h2 {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
     }
-    
+
     #welcome-screen p, #welcome-screen ul {
-        font-size: 1rem;
+        font-size: 0.95rem;
     }
-    
+
     #welcome-screen {
-        padding: 5px;
+        padding: 6px;
     }
-    
+
     #welcome-screen ul {
         max-width: 95%;
     }
