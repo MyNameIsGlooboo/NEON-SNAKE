@@ -488,20 +488,20 @@ if (skipSubmitBtn) {
 /* Welcome screen view leaderboard toggle */
 if (viewLeaderboardBtn && welcomeLeaderboard) {
     viewLeaderboardBtn.addEventListener('click', function () {
-        if (welcomeLeaderboard.style.display === 'none' || welcomeLeaderboard.style.display === '') {
-            welcomeLeaderboard.style.display = 'block';
-            refreshLeaderboards();
-        } else {
-            welcomeLeaderboard.style.display = 'none';
-        }
+        const opened = welcomeLeaderboard.classList.toggle('open');
+        if (opened) refreshLeaderboards();
+    });
+    const closeWelcomeBtn = document.getElementById('close-welcome-leaderboard');
+    if (closeWelcomeBtn) closeWelcomeBtn.addEventListener('click', function () {
+        welcomeLeaderboard.classList.remove('open');
     });
 }
 
 /* Initialize leaderboards on load */
 document.addEventListener('DOMContentLoaded', function () {
     refreshLeaderboards();
-    // Ensure the welcome leaderboard is visible on initial load
-    if (welcomeLeaderboard) welcomeLeaderboard.style.display = 'block';
+    // Ensure the welcome leaderboard is visible on initial load (compact)
+    if (welcomeLeaderboard) welcomeLeaderboard.classList.add('open');
 });
 
 /* Initial setup (preserve existing behavior) */

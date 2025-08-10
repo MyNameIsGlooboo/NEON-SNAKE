@@ -322,6 +322,110 @@ button:active {
     box-shadow: 0 0 20px rgba(0, 150, 255, 0.5);
 }
 
+/* Leaderboard panel styling (welcome + game-over) */
+.leaderboard.panel {
+    background: linear-gradient(180deg, rgba(10,10,20,0.75), rgba(0,0,0,0.6));
+    border: 1px solid rgba(0,150,255,0.12);
+    padding: 12px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 6px 30px rgba(0,150,255,0.08);
+    color: #e6f7ff;
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+}
+
+.leaderboard.panel.open {
+    display: flex;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.panel-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #00e5ff;
+}
+
+.panel-close {
+    background: transparent;
+    border: none;
+    color: #cfeffb;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.15s ease;
+}
+
+.panel-close:hover {
+    background: rgba(255,255,255,0.03);
+}
+
+.leaderboard-list {
+    list-style: decimal;
+    padding-left: 18px;
+    margin: 8px 0;
+    max-height: 220px;
+    overflow: auto;
+}
+
+.leaderboard-list li {
+    padding: 6px 8px;
+    border-radius: 6px;
+    margin-bottom: 6px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: #eafcff;
+    font-size: 0.98rem;
+}
+
+.leaderboard-list li small {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.8rem;
+}
+
+.panel-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(255,255,255,0.02);
+}
+
+button.secondary {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.06);
+    color: #dffaff;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.08s ease;
+}
+
+button.secondary:hover {
+    background: rgba(255,255,255,0.02);
+    transform: translateY(-2px);
+}
+
+/* Smaller footprints inside the game-over overlay */
+#game-over .panel {
+    max-width: 360px;
+}
+
 #game-over, #game-paused {
     position: absolute;
     top: 0;

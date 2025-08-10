@@ -21,9 +21,15 @@
                 <button id="start-welcome-btn">START GAME</button>
                 <button id="view-leaderboard-btn">VIEW LEADERBOARD</button>
             </div>
-            <div id="welcome-leaderboard" class="leaderboard" aria-hidden="false">
-                <h3>Leaderboard</h3>
-                <ol id="leaderboard-list"></ol>
+            <div id="welcome-leaderboard" class="leaderboard panel" aria-hidden="false" role="region" aria-label="Welcome leaderboard">
+                <div class="panel-header">
+                    <h3>Top Scores</h3>
+                    <button id="close-welcome-leaderboard" class="panel-close" aria-label="Close leaderboard">✕</button>
+                </div>
+                <ol id="leaderboard-list" class="leaderboard-list"></ol>
+                <div class="panel-footer">
+                    <button id="view-full-leaderboard" class="secondary">View full leaderboard</button>
+                </div>
             </div>
         </div>
         <h1>NEON SNAKE</h1>
@@ -53,9 +59,11 @@
                     <button id="skip-submit-btn">SKIP</button>
                 </div>
             </div>
-            <div id="game-over-leaderboard" class="leaderboard">
-                <h3>Leaderboard</h3>
-                <ol id="leaderboard-list-gameover"></ol>
+            <div id="game-over-leaderboard" class="leaderboard panel" role="region" aria-label="Game over leaderboard">
+                <div class="panel-header">
+                    <h3>Top Scores</h3>
+                </div>
+                <ol id="leaderboard-list-gameover" class="leaderboard-list"></ol>
             </div>
             <button id="restart-btn">PLAY AGAIN</button>
         </div>
