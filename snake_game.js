@@ -674,8 +674,15 @@ if (viewLeaderboardBtn && welcomeLeaderboard) {
 /* Initialize leaderboards on load */
 document.addEventListener('DOMContentLoaded', function () {
     refreshLeaderboards();
-    // Ensure the welcome leaderboard is visible on initial load (compact)
-    if (welcomeLeaderboard) welcomeLeaderboard.classList.add('open');
+    // Keep welcome leaderboard and any modals hidden by default on initial load
+    if (welcomeLeaderboard) {
+        welcomeLeaderboard.classList.remove('open');
+        welcomeLeaderboard.setAttribute('aria-hidden', 'true');
+    }
+    if (gameOverScreen) {
+        gameOverScreen.classList.remove('show');
+        gameOverScreen.setAttribute('aria-hidden', 'true');
+    }
 });
 
 /* Initial setup (preserve existing behavior) */
