@@ -507,11 +507,61 @@ if (playerNameInput) {
     });
 }
 
-/* Refresh both leaderboards from localStorage */
-function refreshLeaderboards() {
-    const scores = getLocalScores();
-    renderLeaderboardToElem(scores, leaderboardList);
-    renderLeaderboardToElem(scores, leaderboardListGameOver);
+/* Refresh both leaderboards (try remote global scores, fallback to local) */
+async function refreshLeaderboards() {
+    // Immediate local render for snappy UX
+    const localScores = getLocalScores();
+    renderLeaderboardToElem(localScores, leaderboardList);
+    renderLeaderboardToElem(localScores, leaderboardListGameOver);
+
+    // Try to fetch global scores from the API and merge/display them
+    if (typeof fetch === 'function') {
+        try {
+            const resp = await fetch('/api/scores?limit=50', { cache: 'no-store' });
+            if (resp && resp.ok) {
+                const remote = await resp.json();
+                // remote should be an array of { name, score, ts }
+                // Merge remote + local, dedupe by ts|name|score (keep remote entries)
+                const seen = new Set();
+                const combined = [];
+
+                const pushUnique = (it) => {
+                    const key = `${it.ts || ''}::${String(it.name || '')}::${String(it.score || '')}`;
+                    if (!seen.has(key)) {
+                        seen.add(key);
+                        combined.push(it);
+                    }
+                };
+
+                // prefer remote first (so global leaderboard shows global top)
+                if (Array.isArray(remote)) {
+                    for (const r of remote) pushUnique(r);
+                }
+
+                // include local entries that are not present remotely (e.g., offline saves)
+                if (Array.isArray(localScores)) {
+                    for (const l of localScores) pushUnique(l);
+                }
+
+                // sort combined by score desc then timestamp
+                combined.sort((a, b) => {
+                    const as = Number(a.score || 0);
+                    const bs = Number(b.score || 0);
+                    if (bs !== as) return bs - as;
+                    const ats = String(a.ts || '');
+                    const bts = String(b.ts || '');
+                    return ats.localeCompare(bts);
+                });
+
+                // render top results
+                renderLeaderboardToElem(combined, leaderboardList);
+                renderLeaderboardToElem(combined, leaderboardListGameOver);
+            }
+        } catch (e) {
+            // network failed -> keep local rendered above
+            // optionally could log or show toast when desired
+        }
+    }
 }
 
 /* Utility: toast notifications */
