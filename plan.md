@@ -32,11 +32,13 @@ Steps
    - Ensure tests that check only static assets pass (tests/test_files_exist.py).
    - Remove or mark server-dependent tests as optional or run them in a server-capable environment.
    - Confirm snake_game.html references snake_game.css and snake_game.js and that those files are present in the final artifact.
+   - STATUS: CI workflow added at .github/workflows/ci.yml. It runs pytest -q for pushes and pull requests to validate the repository's tests automatically.
 6) Deploying to a static host:
    - GitHub Pages: push to gh-pages branch (or use repository settings to serve from docs/ or main branch).
    - Netlify / Vercel: connect the repository and select the branch; no build step required for static files.
    - S3 + CloudFront: upload the built static files and invalidate caches as needed.
    - Ensure the deployment does not include server-only files (app.py, SQLite DB, etc.) unless you intend to deploy a server-side API separately.
+   - STATUS: A GitHub Actions deploy workflow was added at .github/workflows/deploy_pages.yml to publish the repository root to GitHub Pages on push to the main branch. Enable Pages in repository settings to complete publishing.
 7) Optional centralized scoreboard:
    - If you want a global leaderboard, deploy the Flask (or other) API separately (e.g., to a small VPS, Heroku-like environment, or serverless container).
    - Update the frontend to POST to the absolute API URL or use a proxy/redirect so the relative /api/scores path resolves to your server.
@@ -50,8 +52,12 @@ Next steps / How I can help now
   1) Prepare SEARCH/REPLACE edits to move or remove them.
   2) Provide the exact git commands to run to stage and commit those changes.
 
+Files added by this change:
+- .github/workflows/ci.yml (CI that runs pytest -q)
+- .github/workflows/deploy_pages.yml (deploys repository root to GitHub Pages on push to main; enable Pages in settings to publish)
+
 Suggested commands to run now (from repository root)
 ```bash
-git add -A
-git commit -m "chore: remove server-side artifacts (app.py removed)"
+git add .github/workflows/ci.yml .github/workflows/deploy_pages.yml plan.md run_commands.sh server_artifacts_status.txt
+git commit -m "ci: add CI and GitHub Pages deploy workflows; update plan and scripts"
 ```

@@ -4,9 +4,18 @@ Summary:
 - app.py has already been removed (per your message and plan.md). Among the files you added to the chat (snake_game.html, snake_game.css, snake_game.js, plan.md, tests/test_files_exist.py) there are no server-side Python artifacts, DB files, or other server-only files to delete or archive.
 - Therefore, step 2 (remove/archive server-side artifacts from the static deploy target) is already done for the files you've shared.
 
-If you have other server-side files elsewhere in the repository (examples: server.py, api.py, wsgi.py, requirements.txt, Procfile, any .py implementing a Flask/Django API, or *.db files), please add their exact paths or add those files to the chat. I will then prepare SEARCH/REPLACE edits to either delete them or move them into an archive folder (e.g., archive_server/) and provide the exact git commands to apply.
+CI / Deployment updates performed:
+- Added a CI workflow at .github/workflows/ci.yml that runs pytest -q on push and pull requests to ensure the repository's tests pass automatically.
+- Added a GitHub Pages deploy workflow at .github/workflows/deploy_pages.yml which uploads the repository root and deploys it to GitHub Pages on push to the main branch (enable Pages in repo settings to publish).
 
-Suggested commands you may run from the repository root to confirm status:
-git status
-git log -1 --pretty=oneline
+Status of remaining plan items:
+- Step 3 (client-side scoreboard) — done.
+- Step 4 (optional remote submission path) — done (frontend posts to /api/scores and falls back to localStorage).
+- Step 5 (CI / Tests) — done (CI workflow added). You can run pytest locally with pytest -q.
+- Step 6 (Deploy to static host) — added a GitHub Actions deploy workflow; additional repository settings (enable Pages) may be required to publish.
+- Step 7 (centralized server) — still optional and not created here.
+
+Suggested commands you may run from the repository root to apply and verify:
+git add .github/workflows/ci.yml .github/workflows/deploy_pages.yml plan.md run_commands.sh server_artifacts_status.txt
+git commit -m "ci: add CI and GitHub Pages deploy workflows; update plan and scripts"
 pytest -q
