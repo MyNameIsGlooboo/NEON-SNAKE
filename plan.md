@@ -1,45 +1,33 @@
-# Scoreboard feature — implementation plan
+# Scoreboard feature — implementation plan (updated for static hosting)
 
 Goal
-- Add a persistent scoreboard that stores all user scores (with optional player name).
+- Provide a scoreboard that works on static web hosting (no server-side Python required).
 - Show the scoreboard at the start and at the end of each game.
-- Provide a small on-disk database file (SQLite) to store scores and an API that the frontend will call.
+- Persist scores locally (localStorage) and optionally attempt to send to a remote API if available.
 
-High-level approach (recommended)
-- Add a tiny backend (Flask) that serves the static files and exposes a JSON API backed by SQLite (scores.db).
-- Keep the frontend static JS/HTML changes minimal: show a scoreboard panel on the welcome and game-over screens, allow entering a name or skipping, and POST scores to the API.
+High-level approach
+- Keep the site fully static (HTML/CSS/JS). Implement the scoreboard entirely client-side using localStorage.
+- Optionally, when a remote API at /api/scores is present (for example if you deploy a backend separately), the frontend will attempt to POST scores there and fall back to local-only storage if the network request fails.
 
 Steps
-1) Create this plan file (plan.md).
-2) Add a Flask app (app.py) that:
-   - Serves static files (snake_game.html, snake_game.css, snake_game.js).
-   - Exposes endpoints:
-     - GET /api/scores -> returns top N scores JSON (sorted desc).
-     - POST /api/scores -> accepts { name?, score } and stores a new row with timestamp.
-   - Uses SQLite (scores.db) with a simple schema: id, name (nullable), score (int), ts (timestamp).
-   - Serves CORS only if needed (keep local-only for now).
-3) Add a small DB initializer script (create_db.py) to create scores.db and the table.
-4) Update snake_game.html:
-   - Add a scoreboard container/modal visible on the welcome and game-over screens.
-   - Add an input for player name and a "skip" option.
-5) Update snake_game.js:
-   - Fetch and render leaderboard on load and after game over (GET /api/scores).
-   - When game ends, allow submitting score with name (POST /api/scores).
-   - Re-fetch leaderboard after a successful submit and display it.
-   - Gracefully handle network errors (fall back to showing a message).
-6) Add basic tests (tests/test_scoreboard_api.py) for the API (use Flask test client):
-   - Test GET returns JSON list.
-   - Test POST creates a new score and returns created resource/status.
-7) Update README with brief instructions to run the server and view the game.
-8) Optional: Add client-side localStorage fallback for environments without the API.
+1) Use this plan file (plan.md).
+2) Convert scoreboard to client-side storage (localStorage) and add UI:
+   - Add a leaderboard panel shown on the welcome and game-over screens.
+   - Add an input for player name on game-over and allow skipping.
+   - Store scores in localStorage under a single key (neon_snake_scores).
+3) Keep an optional remote submission path:
+   - When submitting a score the frontend will attempt to POST to /api/scores.
+   - If the POST succeeds, the returned record will also be stored locally for display.
+   - If the POST fails (404 or network error), the score will be stored locally.
+4) Tests that rely on a Flask API should be adapted or optional; the core game should work without any server.
+5) Update README with instructions for static hosting (open snake_game.html) and note optional backend integration.
 
 Notes / decisions
-- I chose Flask + SQLite because it's minimal, easy to run locally, and works well with the static frontend.
-- An alternative is to keep everything client-side using localStorage, but that won't create a repository-level "db file".
-- The API will be intentionally simple (no auth) since this is a local game; if you want multi-user or remote deployment later we can add authentication and rate-limiting.
+- This approach is static-host friendly (GitHub Pages, Netlify, etc.) and keeps user data in the browser.
+- If you later want a centralized scoreboard, you can deploy the Flask app separately and the frontend will use it when available.
 
 Suggested commands (run from repository root)
 ```bash
 git add plan.md
-git commit -m "chore(plan): add scoreboard implementation plan"
+git commit -m "chore(plan): switch to client-side scoreboard for static hosting"
 ```

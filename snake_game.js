@@ -335,7 +335,163 @@ function getCookie(name) {
 highScore = getCookie('high_score');
 highScoreElement.textContent = highScore;
 
-// Initial setup
+/* --- Leaderboard / score persistence (client-first, localStorage fallback) --- */
+
+function _escapeHtml(s) {
+    return String(s || '').replace(/[&<>"'`=\/]/g, function (c) {
+        return {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;',
+            '/': '&#x2F;',
+            '`': '&#x60;',
+            '=': '&#x3D;'
+        }[c];
+    });
+}
+
+function getLocalScores() {
+    try {
+        return JSON.parse(localStorage.getItem('neon_snake_scores') || '[]');
+    } catch (e) {
+        return [];
+    }
+}
+
+function saveLocalScores(scores) {
+    try {
+        localStorage.setItem('neon_snake_scores', JSON.stringify(scores));
+    } catch (e) {
+        // ignore quota errors
+    }
+}
+
+function addLocalScore(name, score, ts) {
+    const scores = getLocalScores();
+    scores.push({ name: name || null, score: score, ts: ts });
+    scores.sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        return (a.ts || '').localeCompare(b.ts || '');
+    });
+    if (scores.length > 100) scores.length = 100;
+    saveLocalScores(scores);
+    return scores;
+}
+
+function renderLeaderboardToElem(scores, olElem, limit = 10) {
+    if (!olElem) return;
+    olElem.innerHTML = '';
+    const list = (scores || []).slice(0, limit);
+    if (list.length === 0) {
+        olElem.insertAdjacentHTML('beforeend', '<li>No scores yet</li>');
+        return;
+    }
+    for (const item of list) {
+        const name = item.name ? _escapeHtml(item.name) : '—';
+        const ts = item.ts ? ' <small>(' + _escapeHtml(item.ts) + ')</small>' : '';
+        olElem.insertAdjacentHTML('beforeend', `<li>${name} — ${item.score}${ts}</li>`);
+    }
+}
+
+/* Try to submit to remote API; resolves with returned JSON on success, rejects on failure */
+function submitToApi(name, score) {
+    return fetch('/api/scores', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name || null, score: score })
+    }).then(resp => {
+        if (!resp.ok) throw new Error('remote submit failed');
+        return resp.json();
+    });
+}
+
+/* UI wiring */
+const leaderboardList = document.getElementById('leaderboard-list');
+const leaderboardListGameOver = document.getElementById('leaderboard-list-gameover');
+const viewLeaderboardBtn = document.getElementById('view-leaderboard-btn');
+const welcomeLeaderboard = document.getElementById('welcome-leaderboard');
+const gameOverLeaderboard = document.getElementById('game-over-leaderboard');
+const playerNameInput = document.getElementById('player-name');
+const submitScoreBtn = document.getElementById('submit-score-btn');
+const skipSubmitBtn = document.getElementById('skip-submit-btn');
+
+/* Refresh both leaderboards from localStorage */
+function refreshLeaderboards() {
+    const scores = getLocalScores();
+    renderLeaderboardToElem(scores, leaderboardList);
+    renderLeaderboardToElem(scores, leaderboardListGameOver);
+}
+
+/* Public function to be called when game ends to show leaderboard and prepare submission */
+function onGameOverShowLeaderboard(currentScore) {
+    refreshLeaderboards();
+    if (playerNameInput) playerNameInput.value = '';
+    // show leaderboard area
+    if (gameOverLeaderboard) gameOverLeaderboard.style.display = 'block';
+}
+
+/* Hook into existing endGame behavior by augmenting endGame (endGame already calls showing UI) */
+const _originalEndGame = endGame;
+endGame = function () {
+    // call original endGame to set UI and final score
+    _originalEndGame();
+    // Then show the client-side leaderboard and ensure submission UI is visible
+    onGameOverShowLeaderboard(score);
+};
+
+/* Submit / skip handlers */
+if (submitScoreBtn) {
+    submitScoreBtn.addEventListener('click', function () {
+        const name = playerNameInput ? playerNameInput.value.trim() : '';
+        const ts = new Date().toISOString();
+        // Try remote submit; on failure, fall back to local storage
+        submitScoreBtn.disabled = true;
+        submitToApi(name || null, score).then(remoteObj => {
+            // If API returned an object, also store locally for offline display
+            const rname = remoteObj && remoteObj.name !== undefined ? remoteObj.name : name || null;
+            const rscore = remoteObj && remoteObj.score !== undefined ? remoteObj.score : score;
+            const rts = remoteObj && remoteObj.ts ? remoteObj.ts : ts;
+            addLocalScore(rname, rscore, rts);
+            refreshLeaderboards();
+        }).catch(() => {
+            // Fallback: save locally
+            addLocalScore(name || null, score, ts);
+            refreshLeaderboards();
+        }).finally(() => {
+            submitScoreBtn.disabled = false;
+            // hide submit UI after submit
+            if (playerNameInput) playerNameInput.value = '';
+        });
+    });
+}
+
+if (skipSubmitBtn) {
+    skipSubmitBtn.addEventListener('click', function () {
+        // just refresh leaderboards (no new score saved)
+        refreshLeaderboards();
+    });
+}
+
+/* Welcome screen view leaderboard toggle */
+if (viewLeaderboardBtn && welcomeLeaderboard) {
+    viewLeaderboardBtn.addEventListener('click', function () {
+        if (welcomeLeaderboard.style.display === 'none' || welcomeLeaderboard.style.display === '') {
+            welcomeLeaderboard.style.display = 'block';
+            refreshLeaderboards();
+        } else {
+            welcomeLeaderboard.style.display = 'none';
+        }
+    });
+}
+
+/* Initialize leaderboards on load */
+document.addEventListener('DOMContentLoaded', function () {
+    refreshLeaderboards();
+});
+
+/* Initial setup (preserve existing behavior) */
 initGame();
 window.addEventListener('resize', initGame);
 
@@ -343,6 +499,7 @@ window.addEventListener('resize', initGame);
 function startGame() {
     if (!gameRunning) {
         welcomeScreen.style.display = 'none';
+        if (welcomeLeaderboard) welcomeLeaderboard.style.display = 'none';
         initGame();
         gameRunning = true;
         gamePaused = false;

@@ -17,7 +17,14 @@
                 <li>Each food gives <span style="color:#ff00aa">10 points</span></li>
             </ul>
             <p>Press START to begin your neon adventure!</p>
-            <button id="start-welcome-btn">START GAME</button>
+            <div class="welcome-actions">
+                <button id="start-welcome-btn">START GAME</button>
+                <button id="view-leaderboard-btn">VIEW LEADERBOARD</button>
+            </div>
+            <div id="welcome-leaderboard" class="leaderboard" aria-hidden="false">
+                <h3>Leaderboard</h3>
+                <ol id="leaderboard-list"></ol>
+            </div>
         </div>
         <h1>NEON SNAKE</h1>
         <div class="score-container">
@@ -38,6 +45,18 @@
         <div id="game-over">
             <div>GAME OVER!</div>
             <div>Your score: <span id="final-score">0</span></div>
+            <div class="submit-score">
+                <label for="player-name">Enter name (optional):</label>
+                <input id="player-name" type="text" maxlength="32" placeholder="Your name">
+                <div class="submit-actions">
+                    <button id="submit-score-btn">SUBMIT SCORE</button>
+                    <button id="skip-submit-btn">SKIP</button>
+                </div>
+            </div>
+            <div id="game-over-leaderboard" class="leaderboard">
+                <h3>Leaderboard</h3>
+                <ol id="leaderboard-list-gameover"></ol>
+            </div>
             <button id="restart-btn">PLAY AGAIN</button>
         </div>
         <div id="game-paused">
