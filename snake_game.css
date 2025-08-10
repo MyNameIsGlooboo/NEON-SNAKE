@@ -218,12 +218,13 @@ h1 {
     aspect-ratio: 1/1;
 }
 
-/* Centered large Game Over text (behind modal, above canvas) */
+/* Centered large Game Over text (positioned to the left of the modal, above the canvas) */
 .game-over-text {
     position: absolute;
-    left: 50%;
-    top: 48%;
-    transform: translate(-50%, -50%);
+    /* place the text to the left of the modal card (modal is centered), using the modal width variable */
+    left: calc(50% - var(--modal-width) / 2 - 80px);
+    top: 50%;
+    transform: translateY(-50%);
     font-size: 2.2rem;
     font-weight: 800;
     color: #ffffff;
@@ -234,12 +235,16 @@ h1 {
     pointer-events: none;
     opacity: 0;
     transition: opacity 220ms ease, transform 220ms ease;
+    max-width: 280px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* visible state for game-over text */
 .game-over-text.show {
     opacity: 1;
-    transform: translate(-50%, -62%);
+    transform: translateY(-50%) translateX(-6px);
 }
 
 .touch-controls {
