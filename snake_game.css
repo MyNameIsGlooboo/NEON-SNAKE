@@ -218,24 +218,23 @@ h1 {
     aspect-ratio: 1/1;
 }
 
-/* Centered large Game Over text (positioned to the left of the modal, above the canvas) */
+/* Prominent Game Over text (subtle, centered above the canvas; hidden while modal open) */
 .game-over-text {
     position: absolute;
-    /* place the text to the left of the modal card (modal is centered), using the modal width variable */
-    left: calc(50% - var(--modal-width) / 2 - 80px);
+    left: 50%;
     top: 50%;
-    transform: translateY(-50%);
-    font-size: 2.2rem;
+    transform: translate(-50%, -50%);
+    font-size: 2.0rem;
     font-weight: 800;
-    color: #ffffff;
+    color: rgba(255,255,255,0.95);
     letter-spacing: 3px;
     text-align: center;
-    text-shadow: 0 6px 30px rgba(0,217,255,0.06), 0 0 20px rgba(255,0,170,0.06);
+    text-shadow: 0 8px 40px rgba(0,217,255,0.06), 0 0 24px rgba(255,0,170,0.06);
     z-index: 90; /* below modal (120) but above canvas */
     pointer-events: none;
     opacity: 0;
     transition: opacity 220ms ease, transform 220ms ease;
-    max-width: 280px;
+    max-width: 320px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -244,7 +243,14 @@ h1 {
 /* visible state for game-over text */
 .game-over-text.show {
     opacity: 1;
-    transform: translateY(-50%) translateX(-6px);
+    transform: translate(-50%, -62%);
+}
+
+/* Hide the decorative game-over text while a modal is open (improves readability) */
+body.modal-open .game-over-text {
+    opacity: 0 !important;
+    transform: translate(-50%, -50%) !important;
+    pointer-events: none;
 }
 
 .touch-controls {
@@ -677,21 +683,49 @@ button.secondary:hover {
     pointer-events: none;
 }
 
-/* modal card */
+/* modal card - larger, more spacious and clearer hierarchy */
 .modal .modal-body {
     width: 100%;
-    max-width: var(--modal-width);
-    background: linear-gradient(180deg, rgba(8,10,15,0.98), rgba(6,8,12,0.9));
-    border-radius: var(--radius);
-    padding: 22px;
-    box-shadow: 0 18px 60px rgba(0,150,255,0.08);
-    border: 1px solid rgba(0,150,255,0.08);
+    max-width: 560px;
+    background: linear-gradient(180deg, rgba(12,14,18,0.98), rgba(6,8,12,0.94));
+    border-radius: calc(var(--radius) + 4px);
+    padding: 28px;
+    box-shadow: 0 30px 80px rgba(0,150,255,0.08), 0 6px 24px rgba(0,0,0,0.6);
+    border: 1px solid rgba(0,150,255,0.10);
     pointer-events: auto;
     text-align: center;
     color: #eafcff;
     transform: translateY(6px) scale(0.98);
     opacity: 0;
     transition: transform 220ms cubic-bezier(.2,.9,.3,1), opacity 220ms ease;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: stretch;
+}
+
+/* Make modal content layout friendlier: header -> body -> footer */
+.modal .modal-body .modal-score {
+    margin-top: 4px;
+    margin-bottom: 6px;
+}
+
+/* Make leaderboard inside modal stretch and appear as a contained card */
+.modal .leaderboard.panel {
+    max-width: 100%;
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(6,8,12,0.9), rgba(8,10,15,0.85));
+    box-shadow: inset 0 -6px 18px rgba(0,0,0,0.35);
+}
+
+/* Ensure modal footer buttons are centered and prominent */
+.modal .modal-footer {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 6px;
 }
 
 /* title */
@@ -726,13 +760,24 @@ button.secondary:hover {
     position: absolute;
     top: 12px;
     right: 12px;
-    background: transparent;
-    border: none;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.03);
     color: #cfeffb;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     cursor: pointer;
     padding: 6px;
-    border-radius: 6px;
+    border-radius: 10px;
+    transition: background 0.12s ease, transform 0.08s ease;
+}
+
+.modal-close:hover {
+    background: rgba(255,255,255,0.04);
+    transform: translateY(-2px);
 }
 
 .modal-close:hover {
