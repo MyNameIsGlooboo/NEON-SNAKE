@@ -1,39 +1,73 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import json
-import os
 import datetime
+import time
+import os
+import re
+
+import db
 
 app = Flask(__name__)
 CORS(app)
 
-DATA_FILE = os.path.join(os.path.dirname(__file__), 'scores.json')
-MAX_STORE = 2000
+# Initialize SQLite DB
+db.init_db()
 
-def _ensure_datafile():
-    if not os.path.exists(DATA_FILE):
-        try:
-            with open(DATA_FILE, 'w', encoding='utf-8') as fh:
-                json.dump([], fh)
-        except Exception:
-            pass
+# Simple in-memory rate limiter per IP (sliding window)
+_RATE_WINDOW = 60  # seconds
+_MAX_PER_WINDOW = 20
+_rate_store = {}  # ip -> list[timestamp]
 
-def load_scores():
-    _ensure_datafile()
+# Basic input constraints
+_MAX_NAME_LEN = 32
+_ISO_RE = re.compile(r'^\d{4}-\d{2}-\d{2}T')
+
+def _get_client_ip():
+    # Prefer X-Forwarded-For if present (useful behind proxies); otherwise remote_addr
+    xff = request.headers.get('X-Forwarded-For', '')
+    if xff:
+        return xff.split(',')[0].strip()
+    return request.remote_addr or 'unknown'
+
+def _rate_check(ip):
+    now = time.time()
+    arr = _rate_store.get(ip) or []
+    # keep only recent timestamps
+    arr = [t for t in arr if now - t < _RATE_WINDOW]
+    if len(arr) >= _MAX_PER_WINDOW:
+        _rate_store[ip] = arr
+        return False
+    arr.append(now)
+    _rate_store[ip] = arr
+    return True
+
+def _validate_name(name):
+    if name is None:
+        return None
+    s = str(name).strip()
+    if not s:
+        return None
+    if len(s) > _MAX_NAME_LEN:
+        s = s[:_MAX_NAME_LEN]
+    return s
+
+def _validate_score(score):
     try:
-        with open(DATA_FILE, 'r', encoding='utf-8') as fh:
-            return json.load(fh)
+        s = int(score)
+        if s < 0:
+            s = 0
+        return s
     except Exception:
-        return []
+        return 0
 
-def save_scores(scores):
-    # keep file bounded
-    scores = scores[-MAX_STORE:]
-    try:
-        with open(DATA_FILE, 'w', encoding='utf-8') as fh:
-            json.dump(scores, fh, ensure_ascii=False, indent=2)
-    except Exception:
-        pass
+def _validate_ts(ts):
+    if ts and isinstance(ts, str) and _ISO_RE.match(ts):
+        return ts
+    return datetime.datetime.utcnow().isoformat() + 'Z'
+
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({'status': 'ok'}), 200
 
 @app.route('/api/scores', methods=['GET'])
 def get_scores():
@@ -47,45 +81,33 @@ def get_scores():
     except Exception:
         limit = 50
 
-    scores = load_scores()
-    try:
-        scores_sorted = sorted(
-            scores,
-            key=lambda s: (-(int(s.get('score', 0)) if s.get('score') is not None else 0),
-                           s.get('ts', ''))
-        )
-    except Exception:
-        scores_sorted = scores
-    return jsonify(scores_sorted[:limit]), 200
+    scores = db.get_scores(limit=limit)
+    # db.get_scores already returns ordered results
+    return jsonify(scores), 200
 
 @app.route('/api/scores', methods=['POST'])
 def post_score():
     """
     Accepts JSON { name: string|null, score: number, ts?: string }.
     Stores it and returns the stored object with timestamp.
+    Implements simple rate-limiting and server-side validation.
     """
-    payload = {}
+    ip = _get_client_ip()
+    if not _rate_check(ip):
+        return jsonify({'error': 'rate limit exceeded'}), 429
+
     try:
         payload = request.get_json(force=True) or {}
     except Exception:
         return jsonify({'error': 'invalid json'}), 400
 
-    name = payload.get('name') if payload.get('name') not in (None, '') else None
-    try:
-        score = int(payload.get('score', 0))
-    except Exception:
-        score = 0
+    name = _validate_name(payload.get('name'))
+    score = _validate_score(payload.get('score', 0))
+    ts = _validate_ts(payload.get('ts'))
 
-    ts = payload.get('ts') or datetime.datetime.utcnow().isoformat() + 'Z'
-
-    entry = {'name': name, 'score': score, 'ts': ts}
-
-    scores = load_scores()
-    scores.append(entry)
-    save_scores(scores)
-
+    entry = db.add_score(name, score, ts)
     return jsonify(entry), 201
 
 if __name__ == '__main__':
-    # Run simple dev server. For production, use a proper WSGI server.
+    # Development server
     app.run(host='0.0.0.0', port=5000, debug=True)
