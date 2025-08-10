@@ -2,9 +2,60 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Neon Snake Game</title>
     <style>
+        @media (max-width: 767px) {
+            .game-container {
+                padding: 15px;
+                width: 100%;
+                max-width: 100%;
+                margin: 0;
+                border-radius: 0;
+                height: 100vh;
+                justify-content: center;
+                gap: 10px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .score-container {
+                font-size: 1rem;
+            }
+            
+            .controls button {
+                padding: 8px 15px;
+                font-size: 1rem;
+            }
+            
+            .touch-controls {
+                width: 200px;
+                height: 120px;
+            }
+            
+            .touch-controls button {
+                font-size: 1.5rem;
+            }
+            
+            #welcome-screen h2 {
+                font-size: 2rem;
+            }
+            
+            #welcome-screen p, #welcome-screen ul {
+                font-size: 1.2rem;
+            }
+            
+            #welcome-screen {
+                padding: 10px;
+            }
+            
+            #welcome-screen ul {
+                max-width: 90%;
+            }
+        }
+        
         * {
             margin: 0;
             padding: 0;
