@@ -561,11 +561,7 @@ endGame = function () {
     // call original endGame to set UI and final score
     _originalEndGame();
 
-    // Show large background GAME OVER text (if present)
-    try {
-        const goText = document.getElementById('game-over-text');
-        if (goText) goText.classList.add('show');
-    } catch (e) {}
+    // Decorative standalone GAME OVER element removed; modal now displays the end state.
 
     // Then show the client-side leaderboard and ensure submission UI is visible
     onGameOverShowLeaderboard(score);
@@ -699,11 +695,7 @@ window.addEventListener('resize', initGame);
 // Hide welcome screen when game starts
 function startGame() {
     if (!gameRunning) {
-        // hide large GAME OVER text if visible
-        try {
-            const goText = document.getElementById('game-over-text');
-            if (goText) goText.classList.remove('show');
-        } catch (e) {}
+        // Decorative standalone GAME OVER element removed; modal handles visibility now.
 
         welcomeScreen.style.display = 'none';
         if (welcomeLeaderboard) welcomeLeaderboard.style.display = 'none';

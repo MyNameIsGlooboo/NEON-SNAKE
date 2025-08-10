@@ -218,40 +218,7 @@ h1 {
     aspect-ratio: 1/1;
 }
 
-/* Prominent Game Over text (subtle, centered above the canvas; hidden while modal open) */
-.game-over-text {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 2.0rem;
-    font-weight: 800;
-    color: rgba(255,255,255,0.95);
-    letter-spacing: 3px;
-    text-align: center;
-    text-shadow: 0 8px 40px rgba(0,217,255,0.06), 0 0 24px rgba(255,0,170,0.06);
-    z-index: 90; /* below modal (120) but above canvas */
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 220ms ease, transform 220ms ease;
-    max-width: 320px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* visible state for game-over text */
-.game-over-text.show {
-    opacity: 1;
-    transform: translate(-50%, -62%);
-}
-
-/* Hide the decorative game-over text while a modal is open (improves readability) */
-body.modal-open .game-over-text {
-    opacity: 0 !important;
-    transform: translate(-50%, -50%) !important;
-    pointer-events: none;
-}
+/* Decorative standalone "GAME OVER" text removed - title is shown in the modal only */
 
 .touch-controls {
     display: grid;
@@ -664,25 +631,32 @@ button.secondary:hover {
     --panel-bg: rgba(6,8,20,0.92);
     --glass: rgba(255,255,255,0.03);
     --radius: 12px;
-    --modal-width: 420px;
+    --modal-width: 560px;
 }
 
-/* backdrop layer is implicit via the modal container; center the modal over the canvas area */
+/* Backdrop / modal overlay: subtle, centered, and accessible */
 .modal {
-    position: absolute;
+    position: fixed;
     inset: 0;
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 500;
-    background: rgba(2,6,15,0.72);
-    backdrop-filter: blur(8px) saturate(140%);
+    z-index: 900;
+    background: rgba(2,6,15,0.64); /* slightly lighter to help the card pop */
+    backdrop-filter: blur(6px) saturate(120%);
     width: 100%;
     height: 100%;
     pointer-events: none;
-    transition: opacity 220ms ease, visibility 220ms linear;
+    transition: opacity 240ms ease, visibility 240ms linear;
     opacity: 0;
     visibility: hidden;
+}
+
+/* When modal visible we enable pointer-events and make it interactive */
+.modal.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
 /* modal card - redesigned: clear hierarchy, roomy, and aligned over the board */
@@ -822,28 +796,26 @@ button.secondary:hover {
     position: absolute;
     top: 12px;
     right: 12px;
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.03);
-    color: #cfeffb;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    color: #eafcff;
     font-size: 1.05rem;
     cursor: pointer;
     padding: 6px;
     border-radius: 10px;
-    transition: background 0.12s ease, transform 0.08s ease;
+    transition: background 0.12s ease, transform 0.08s ease, box-shadow 0.12s ease;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45);
 }
 
 .modal-close:hover {
-    background: rgba(255,255,255,0.04);
+    background: rgba(255,255,255,0.06);
     transform: translateY(-2px);
-}
-
-.modal-close:hover {
-    background: rgba(255,255,255,0.02);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.55);
 }
 
 /* accessibility: focus outline for modal when focused programmatically */
@@ -867,33 +839,35 @@ body.modal-open {
 }
 
 /* Form / input inside modal - improved with icon and stronger focus */
+/* Input group styling improved for clarity and contrast */
 .submit-score-form .player-name-field {
     display: flex;
     align-items: center;
     gap: 10px;
     width: 100%;
-    padding: 6px;
+    padding: 8px;
     border-radius: 12px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.08));
-    border: 1px solid rgba(255,255,255,0.03);
+    background: rgba(0,0,0,0.28);
+    border: 1px solid rgba(255,255,255,0.04);
+    box-shadow: inset 0 -4px 14px rgba(0,0,0,0.45);
 }
 
 .submit-score-form .input-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
     color: var(--accent-cyan, #00e5ff);
     font-size: 18px;
-    background: linear-gradient(135deg, rgba(0,217,255,0.04), rgba(255,0,170,0.02));
-    box-shadow: inset 0 -2px 6px rgba(0,0,0,0.25);
+    background: linear-gradient(135deg, rgba(0,217,255,0.06), rgba(255,0,170,0.03));
+    box-shadow: inset 0 -2px 6px rgba(0,0,0,0.35);
 }
 
 .submit-score-form .player-name-input {
     flex: 1;
-    padding: 12px 14px;
+    padding: 14px 14px;
     border-radius: 8px;
     border: none;
     background: transparent;
@@ -903,18 +877,19 @@ body.modal-open {
     transition: box-shadow 0.12s ease, transform 0.06s ease;
 }
 
+/* placeholder color */
 .submit-score-form .player-name-input::placeholder {
-    color: rgba(255,255,255,0.45);
+    color: rgba(255,255,255,0.42);
 }
 
 /* stronger and accessible focus */
 .submit-score-form .player-name-input:focus,
 .submit-score-form .player-name-input:focus-visible {
-    box-shadow: 0 0 0 8px rgba(0,229,255,0.08);
+    box-shadow: 0 0 0 10px rgba(0,229,255,0.08);
     transform: translateY(-1px);
 }
 
-/* minimal "has-value" state so we can style later if needed */
+/* minimal "has-value" state */
 .submit-score-form .player-name-input.has-value {
     background: rgba(255,255,255,0.01);
 }
