@@ -229,7 +229,7 @@ body {
     width: 100%;
     max-width: 720px;
     margin: 0 auto;
-    transform: translateZ(0);
+    will-change: transform;
     transition: transform 180ms ease;
 }
 
