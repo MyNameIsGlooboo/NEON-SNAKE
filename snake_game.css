@@ -104,14 +104,16 @@
     .game-container {
         padding: 6px 6px;
         gap: 8px;
-        max-width: 360px;
+        max-width: calc(100% - 12px);
         margin: 0 auto;
         border-radius: 10px;
+        box-sizing: border-box;
     }
 
     h1 {
         font-size: 1.1rem;
         padding: 0 4px;
+        text-align: center;
     }
 
     .score-container {
@@ -128,18 +130,20 @@
         min-width: 68px;
     }
 
-    /* Canvas scales to available width but stays square */
+    /* Canvas scales to available width but stays square and centered */
     #game-board {
-        width: min(320px, calc(100vw - 28px));
-        height: min(320px, calc(100vw - 28px));
-        max-width: 100%;
+        width: calc(100vw - 24px);
+        height: calc(100vw - 24px);
+        max-width: 320px;
+        max-height: 320px;
         aspect-ratio: 1/1;
         margin: 0 auto;
+        display: block;
     }
 
     .touch-controls {
-        width: min(280px, calc(100vw - 48px));
-        max-width: 100%;
+        width: calc(100vw - 48px);
+        max-width: 260px;
         margin: 8px auto 0;
         display: flex;
         flex-wrap: wrap;
@@ -148,14 +152,15 @@
     }
 
     .touch-controls button {
-        width: 64px;
-        height: 52px;
-        font-size: 1.15rem;
+        width: 60px;
+        height: 50px;
+        font-size: 1.05rem;
         border-radius: 10px;
     }
 
     #welcome-screen h2 {
         font-size: 1.6rem;
+        text-align: center;
     }
 
     #welcome-screen p, #welcome-screen ul {
