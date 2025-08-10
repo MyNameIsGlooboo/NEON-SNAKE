@@ -816,19 +816,25 @@ button.secondary:hover {
 /* title (positioned visually above the modal card) */
 .modal .modal-title {
     position: absolute;
-    top: 14px;
+    top: -20px; /* sit above the card so it visually appears on the box top on all viewports */
     left: 50%;
     transform: translateX(-50%);
     font-size: 1.05rem;
     margin: 0;
     color: #ffffff;
     letter-spacing: 1.6px;
-    padding: 8px 18px;
+    padding: 10px 20px;
     border-radius: 22px;
-    background: linear-gradient(90deg, rgba(0,0,0,0.24), rgba(0,0,0,0.12));
-    box-shadow: 0 8px 30px rgba(0,120,200,0.14), 0 2px 6px rgba(0,0,0,0.6);
-    z-index: 20;
-    text-shadow: 0 6px 18px rgba(0,217,255,0.04);
+    background: linear-gradient(90deg, rgba(0,0,0,0.32), rgba(0,0,0,0.12));
+    box-shadow: 0 10px 36px rgba(0,120,200,0.18), 0 4px 8px rgba(0,0,0,0.6);
+    z-index: 1200;
+    text-shadow: 0 6px 18px rgba(0,217,255,0.06);
+    pointer-events: none; /* avoid intercepting taps on small screens */
+}
+
+/* Ensure there's enough top padding in the modal body so content never collides with the title */
+.modal .modal-body {
+    padding-top: 44px; /* leaves room for the floating title */
 }
 
 /* visible state */
