@@ -1,24 +1,3 @@
-"""
-Flask backend for Neon Snake scoreboard (step 2).
-
-- Serves static files (snake_game.html, snake_game.css, snake_game.js) from the repository root.
-- Provides a simple SQLite-backed JSON API:
-    GET  /api/scores      -> returns top N scores (query param: ?limit=10)
-    POST /api/scores      -> accepts JSON { "name"?: string, "score": int } and stores a new score
-
-The app will create the SQLite database file `scores.db` and the scores table on first run
-(if they don't already exist), so a separate DB initializer is optional.
-"""
-from pathlib import Path
-from datetime import datetime
-import sqlite3
-from flask import Flask, request, jsonify, send_from_directory, abort
-
-APP_DIR = Path(__file__).parent.resolve()
-DB_PATH = APP_DIR / "scores.db"
-STATIC_DIR = APP_DIR  # static files (snake_game.html, snake_game.css, snake_game.js) live in repo root
-
-app = Flask(__name__)
 
 
 def get_db_connection():
