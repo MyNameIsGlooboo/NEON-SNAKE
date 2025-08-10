@@ -280,16 +280,69 @@ button {
 
 /* Primary filled style (used for strong actions) */
 button.primary {
+    position: relative;
+    overflow: hidden;
     background: linear-gradient(135deg, #00ffd1 0%, #00aaff 100%);
     color: #011219;
     border: none;
     box-shadow: 0 12px 30px rgba(0,170,255,0.14), 0 2px 6px rgba(0,0,0,0.5);
+    padding: 10px 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
 }
 
 button.primary:hover {
     transform: translateY(-3px);
     box-shadow: 0 18px 40px rgba(0,170,255,0.20);
 }
+
+/* Spinner inside buttons */
+.btn-spinner {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid rgba(1,2,3,0.12);
+    border-top-color: rgba(255,255,255,0.9);
+    box-sizing: border-box;
+    animation: spin 800ms linear infinite;
+    display: inline-block;
+    visibility: hidden;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 120ms ease, transform 120ms ease, visibility 0ms linear 120ms;
+}
+
+/* when loading, show spinner and dim label */
+button.primary.loading .btn-spinner {
+    visibility: visible;
+    opacity: 1;
+    transform: scale(1);
+    transition-delay: 0ms;
+}
+
+button.primary .btn-label {
+    display: inline-block;
+    transition: opacity 120ms ease, transform 120ms ease;
+}
+
+button.primary.loading .btn-label {
+    opacity: 0;
+    transform: translateY(-4px);
+    pointer-events: none;
+}
+
+/* Disabled state */
+button.primary:disabled,
+button.primary[disabled] {
+    opacity: 0.85;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* spinner animation */
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* Secondary (ghost) style for less-prominent actions */
 button.secondary {

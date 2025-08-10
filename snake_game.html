@@ -60,7 +60,10 @@
                         <input id="player-name" class="player-name-input" type="text" maxlength="32" placeholder="Your name" aria-label="Player name (optional)" autocomplete="name" aria-describedby="submit-status">
                     </div>
                     <div class="submit-actions">
-                        <button id="submit-score-btn" class="primary" type="submit">SUBMIT SCORE</button>
+                        <button id="submit-score-btn" class="primary" type="submit" aria-live="polite">
+                            <span class="btn-label">SUBMIT SCORE</span>
+                            <span class="btn-spinner" aria-hidden="true" role="status"></span>
+                        </button>
                         <button id="skip-submit-btn" class="secondary" type="button">SKIP</button>
                     </div>
                     <div id="submit-status" class="visually-hidden" aria-live="polite"></div>

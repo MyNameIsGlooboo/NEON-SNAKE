@@ -33,10 +33,15 @@ let gameLoop;
 
 // Initialize game
 function initGame() {
-    // Set canvas size based on container
+    // Set canvas size based on container and devicePixelRatio for crisp rendering
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
     canvasSize = Math.min(canvas.parentElement.clientWidth, 400);
-    canvas.width = canvasSize;
-    canvas.height = canvasSize;
+    canvas.style.width = canvasSize + 'px';
+    canvas.style.height = canvasSize + 'px';
+    canvas.width = Math.floor(canvasSize * dpr);
+    canvas.height = Math.floor(canvasSize * dpr);
+    // scale the drawing context so 1 unit = 1 CSS pixel
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     gridSize = canvasSize / tileCount;
     
     snake = [
@@ -510,7 +515,10 @@ if (scoreSubmitForm) {
         evt.preventDefault();
         const name = playerNameInput ? playerNameInput.value.trim() : '';
         const ts = new Date().toISOString();
-        if (submitScoreBtn) submitScoreBtn.disabled = true;
+        if (submitScoreBtn) {
+            submitScoreBtn.disabled = true;
+            submitScoreBtn.classList.add('loading');
+        }
         const statusElem = document.getElementById('submit-status');
         if (statusElem) {
             statusElem.classList.remove('visually-hidden');
@@ -530,7 +538,10 @@ if (scoreSubmitForm) {
             refreshLeaderboards();
             if (statusElem) statusElem.textContent = 'Saved locally';
         }).finally(() => {
-            if (submitScoreBtn) submitScoreBtn.disabled = false;
+            if (submitScoreBtn) {
+                submitScoreBtn.disabled = false;
+                submitScoreBtn.classList.remove('loading');
+            }
             if (playerNameInput) playerNameInput.value = '';
             // keep modal visible briefly then close
             setTimeout(function () {
