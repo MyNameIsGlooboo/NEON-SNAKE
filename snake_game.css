@@ -121,33 +121,45 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Page background - deeper, subtle animated glow */
 body {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    background: radial-gradient(1000px 600px at 10% 10%, rgba(0,150,255,0.06), transparent),
+                radial-gradient(800px 500px at 90% 90%, rgba(255,0,170,0.04), transparent),
+                linear-gradient(135deg, #0f1020 0%, #0b1226 100%);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    overflow: auto;
+    padding: 24px;
 }
 
+/* Main game container: stronger neon frame and roomy layout */
 .game-container {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    padding: 30px;
-    background: rgba(0, 0, 0, 0.4);
-    border-radius: 20px;
-    box-shadow: 0 0 30px rgba(0, 150, 255, 0.5);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(0, 150, 255, 0.3);
-    width: 90%;
-    max-width: 500px;
+    gap: 18px;
+    padding: 28px;
+    background: linear-gradient(180deg, rgba(2,6,15,0.85), rgba(4,8,20,0.7));
+    border-radius: 16px;
+    box-shadow: 0 10px 50px rgba(0, 150, 255, 0.12), 0 2px 6px rgba(0,0,0,0.6);
+    border: 1px solid rgba(0, 150, 255, 0.12);
+    width: 100%;
+    max-width: 720px;
     margin: 0 auto;
+    transform: translateZ(0);
+    transition: transform 180ms ease;
+}
+
+.game-container:hover {
+    transform: translateY(-4px);
 }
 
 h1 {
@@ -252,45 +264,98 @@ h1 {
     margin-top: 10px;
 }
 
+/* Generic button base - modern neon outline, supports .primary / .secondary modifiers */
 button {
-    padding: 12px 25px;
-    background: linear-gradient(135deg, #00d9ff 0%, #0080ff 100%);
-    border: none;
-    border-radius: 50px;
-    color: white;
-    font-size: 1.2rem;
-    font-weight: bold;
+    padding: 10px 20px;
+    background: transparent;
+    border: 1px solid rgba(0,217,255,0.12);
+    color: #e7fbff;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 15px rgba(0, 150, 255, 0.5);
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+    box-shadow: 0 6px 18px rgba(0,150,255,0.04);
 }
 
-button:hover {
+/* Primary filled style (used for strong actions) */
+button.primary {
+    background: linear-gradient(135deg, #00ffd1 0%, #00aaff 100%);
+    color: #011219;
+    border: none;
+    box-shadow: 0 12px 30px rgba(0,170,255,0.14), 0 2px 6px rgba(0,0,0,0.5);
+}
+
+button.primary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 0 20px rgba(0, 150, 255, 0.8);
+    box-shadow: 0 18px 40px rgba(0,170,255,0.20);
 }
 
+/* Secondary (ghost) style for less-prominent actions */
+button.secondary {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.06);
+    color: #dffaff;
+    padding: 8px 14px;
+    border-radius: 10px;
+}
+
+button.secondary:hover {
+    background: rgba(255,255,255,0.02);
+    transform: translateY(-2px);
+}
+
+/* Active / pressed state */
 button:active {
     transform: translateY(0);
+    opacity: 0.95;
 }
 
 #welcome-screen {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.9);
+    inset: 0;
+    background: rgba(2,6,15,0.85);
+    backdrop-filter: blur(6px) saturate(120%);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: white;
-    font-size: 1.5rem;
+    color: #eafcff;
+    font-size: 1.05rem;
     text-align: center;
-    border-radius: 20px;
-    z-index: 20;
+    border-radius: 12px;
+    z-index: 60;
     padding: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 6px 20px rgba(0,150,255,0.06);
+    border: 1px solid rgba(0,150,255,0.06);
+}
+
+/* Welcome content tweaks */
+#welcome-screen h2 {
+    color: #7ef7ff;
+    text-shadow: 0 6px 30px rgba(0,217,255,0.08), 0 0 12px rgba(0,217,255,0.06);
+    font-size: 2rem;
+    margin-bottom: 12px;
+}
+
+#welcome-screen p {
+    max-width: 86%;
+    color: rgba(230,250,255,0.9);
+    margin-bottom: 8px;
+}
+
+.welcome-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+    align-items: center;
+}
+
+/* Make the leaderboard panel sit nicely inside the welcome screen on small viewports */
+#welcome-leaderboard {
+    margin-top: 16px;
+    width: 100%;
+    max-width: 420px;
 }
 
 #welcome-screen h2 {
