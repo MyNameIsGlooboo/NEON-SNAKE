@@ -1,10 +1,10 @@
 /* Extracted styles from snake_game.html */
 @media (max-width: 767px) {
-    /* Reduce outer chrome so the play area remains prominent on small screens */
+    /* Mobile: reduce chrome so the play area is the focus */
     .game-container {
-        padding: 12px 10px;
+        padding: 10px 8px;
         width: 100%;
-        max-width: 380px;
+        max-width: 420px;
         margin: 0 auto;
         border-radius: 12px;
         height: auto;
@@ -12,20 +12,21 @@
         gap: 10px;
     }
 
-    /* Fix canvas size on small screens so it doesn't stretch to fill wide gutters */
+    /* Responsive canvas: scale to viewport but remain square */
     #game-board {
-        width: 320px;
-        height: 320px;
+        width: min(360px, calc(100vw - 32px));
+        height: min(360px, calc(100vw - 32px));
         max-width: 100%;
         aspect-ratio: 1/1;
         margin: 0 auto;
+        display: block;
     }
 
     h1 {
         font-size: 1.6rem;
         white-space: nowrap;
         letter-spacing: 1px;
-        padding: 0 5px;
+        padding: 0 6px;
     }
 
     .score-container {
@@ -33,36 +34,43 @@
         width: 100%;
         display: flex;
         justify-content: space-between;
+        gap: 8px;
+        padding: 0 6px;
     }
 
     /* Smaller control buttons with consistent spacing */
+    .controls {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        width: 100%;
+    }
     .controls button {
         padding: 8px 12px;
         font-size: 0.95rem;
         min-width: 90px;
     }
 
-    /* Touch controls scaled to the canvas and centered */
+    /* Touch controls: compact, centered row/stack layout that matches canvas width */
     .touch-controls {
-        width: 220px;
-        max-width: 90%;
-        height: auto;
-        aspect-ratio: 3/2;
+        width: min(320px, calc(100vw - 48px));
+        max-width: 100%;
         margin: 12px auto 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
         gap: 10px;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(2, 1fr);
     }
 
     .touch-controls button {
+        width: 72px;
+        height: 56px;
         font-size: 1.4rem;
-        display: flex;
+        border-radius: 12px;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
         padding: 0;
-        width: 100%;
-        height: 100%;
     }
 
     #welcome-screen h2 {
@@ -83,17 +91,18 @@
 }
 
 @media (max-width: 480px) {
-    /* Tight mobile layout: reduce padding and keep game area square and centered */
+    /* Very small screens: conserve vertical space and center the square play area */
     .game-container {
-        padding: 8px 8px;
+        padding: 6px 6px;
         gap: 8px;
         max-width: 360px;
         margin: 0 auto;
+        border-radius: 10px;
     }
 
     h1 {
-        font-size: 1.2rem;
-        padding: 0 5px;
+        font-size: 1.1rem;
+        padding: 0 4px;
     }
 
     .score-container {
@@ -101,33 +110,39 @@
         width: 100%;
         display: flex;
         justify-content: space-between;
+        padding: 0 6px;
     }
 
     .controls button {
         padding: 6px 10px;
-        font-size: 0.9rem;
-        min-width: 72px;
+        font-size: 0.88rem;
+        min-width: 68px;
     }
 
-    /* Fix canvas to a comfortable size on very small screens */
+    /* Canvas scales to available width but stays square */
     #game-board {
-        width: 280px;
-        height: 280px;
+        width: min(320px, calc(100vw - 28px));
+        height: min(320px, calc(100vw - 28px));
         max-width: 100%;
         aspect-ratio: 1/1;
         margin: 0 auto;
     }
 
     .touch-controls {
-        width: 200px;
-        max-width: 90%;
-        aspect-ratio: 3/2;
-        margin: 10px auto 0;
+        width: min(280px, calc(100vw - 48px));
+        max-width: 100%;
+        margin: 8px auto 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
         gap: 8px;
     }
 
     .touch-controls button {
-        font-size: 1.2rem;
+        width: 64px;
+        height: 52px;
+        font-size: 1.15rem;
+        border-radius: 10px;
     }
 
     #welcome-screen h2 {
