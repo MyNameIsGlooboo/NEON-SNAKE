@@ -670,17 +670,19 @@ button.secondary:hover {
 /* backdrop layer is implicit via the modal container; center the modal over the canvas area */
 .modal {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    inset: 0;
     display: none;
     align-items: center;
     justify-content: center;
-    z-index: 120;
-    background: rgba(0,0,0,0.35); /* subtle backdrop */
+    z-index: 500;
+    background: rgba(2,6,15,0.72);
+    backdrop-filter: blur(8px) saturate(140%);
     width: 100%;
     height: 100%;
     pointer-events: none;
+    transition: opacity 220ms ease, visibility 220ms linear;
+    opacity: 0;
+    visibility: hidden;
 }
 
 /* modal card - larger, more spacious and clearer hierarchy */
@@ -740,6 +742,8 @@ button.secondary:hover {
 .modal.show {
     display: flex;
     pointer-events: auto;
+    opacity: 1;
+    visibility: visible;
 }
 
 /* when modal is shown, animate the inner card */
