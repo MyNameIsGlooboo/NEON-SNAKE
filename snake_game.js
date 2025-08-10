@@ -475,8 +475,13 @@ if (submitScoreBtn) {
 
 if (skipSubmitBtn) {
     skipSubmitBtn.addEventListener('click', function () {
-        // just refresh leaderboards (no new score saved)
+        // Save the current score as an anonymous/local entry and refresh leaderboards
+        const ts = new Date().toISOString();
+        addLocalScore(null, score, ts);
         refreshLeaderboards();
+        // hide submit UI and clear name input
+        if (playerNameInput) playerNameInput.value = '';
+        gameOverScreen.classList.remove('show');
     });
 }
 
@@ -495,6 +500,8 @@ if (viewLeaderboardBtn && welcomeLeaderboard) {
 /* Initialize leaderboards on load */
 document.addEventListener('DOMContentLoaded', function () {
     refreshLeaderboards();
+    // Ensure the welcome leaderboard is visible on initial load
+    if (welcomeLeaderboard) welcomeLeaderboard.style.display = 'block';
 });
 
 /* Initial setup (preserve existing behavior) */
