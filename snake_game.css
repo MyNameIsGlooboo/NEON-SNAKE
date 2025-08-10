@@ -589,26 +589,57 @@ button.secondary:hover {
     }
 }
 
-/* Form / input inside modal */
-.submit-score-form .player-name-input {
+/* Form / input inside modal - improved with icon and stronger focus */
+.submit-score-form .player-name-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     width: 100%;
+    padding: 6px;
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.08));
+    border: 1px solid rgba(255,255,255,0.03);
+}
+
+.submit-score-form .input-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    color: var(--accent-cyan, #00e5ff);
+    font-size: 18px;
+    background: linear-gradient(135deg, rgba(0,217,255,0.04), rgba(255,0,170,0.02));
+    box-shadow: inset 0 -2px 6px rgba(0,0,0,0.25);
+}
+
+.submit-score-form .player-name-input {
+    flex: 1;
     padding: 12px 14px;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.06);
-    background: rgba(0,0,0,0.25);
+    border-radius: 8px;
+    border: none;
+    background: transparent;
     color: #eafcff;
     outline: none;
-    transition: box-shadow 0.12s ease, border-color 0.12s ease, transform 0.06s ease;
+    font-size: 1rem;
+    transition: box-shadow 0.12s ease, transform 0.06s ease;
 }
 
 .submit-score-form .player-name-input::placeholder {
-    color: rgba(255,255,255,0.5);
+    color: rgba(255,255,255,0.45);
 }
 
-.submit-score-form .player-name-input:focus {
-    box-shadow: 0 0 0 6px rgba(0,229,255,0.08);
-    border-color: rgba(0,217,255,0.6);
+/* stronger and accessible focus */
+.submit-score-form .player-name-input:focus,
+.submit-score-form .player-name-input:focus-visible {
+    box-shadow: 0 0 0 8px rgba(0,229,255,0.08);
     transform: translateY(-1px);
+}
+
+/* minimal "has-value" state so we can style later if needed */
+.submit-score-form .player-name-input.has-value {
+    background: rgba(255,255,255,0.01);
 }
 
 .modal-footer {

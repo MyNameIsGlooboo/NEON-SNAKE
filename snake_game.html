@@ -56,7 +56,8 @@
                 <form id="score-submit-form" class="submit-score-form" novalidate>
                     <label for="player-name" class="visually-hidden">Enter name (optional)</label>
                     <div class="player-name-field">
-                        <input id="player-name" class="player-name-input" type="text" maxlength="32" placeholder="Your name" aria-label="Player name (optional)">
+                        <span class="input-icon" aria-hidden="true">👤</span>
+                        <input id="player-name" class="player-name-input" type="text" maxlength="32" placeholder="Your name" aria-label="Player name (optional)" autocomplete="name" aria-describedby="submit-status">
                     </div>
                     <div class="submit-actions">
                         <button id="submit-score-btn" class="primary" type="submit">SUBMIT SCORE</button>

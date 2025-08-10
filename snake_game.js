@@ -439,6 +439,19 @@ const closeGameOverBtn = document.getElementById('close-game-over');
 /* remember what had focus before opening modal so we can restore it */
 let _prevActiveElement = null;
 
+/* Input improvements: reflect filled state, enforce maxlength defensively */
+if (playerNameInput) {
+    playerNameInput.addEventListener('input', function () {
+        if (this.value && this.value.trim().length > 0) {
+            this.classList.add('has-value');
+        } else {
+            this.classList.remove('has-value');
+        }
+        // enforce max length defensively
+        if (this.value.length > 32) this.value = this.value.slice(0, 32);
+    });
+}
+
 /* Refresh both leaderboards from localStorage */
 function refreshLeaderboards() {
     const scores = getLocalScores();
